@@ -5,7 +5,8 @@ const cors = require("cors");
 const app = express();
 const port = 4000;
 // Routery
-
+const reportsRouter = require("./controller/reports-controller");
+const devicesRouter = require("./controller/devices-controller");
 
 app.use(cors());
 app.use(express.json());
@@ -27,4 +28,6 @@ const server = app.listen(process.env.PORT || 3000, function(){
 app.get("/", (req, res) => {
   res.send('Server pro skupinový projekt na 4. semestr | v0.0.1');
 });
-
+// Nastavení rout
+app.use("/reports", reportsRouter);
+app.use("/devices", devicesRouter);
