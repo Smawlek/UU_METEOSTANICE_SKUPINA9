@@ -17,7 +17,7 @@ class DevicesDao {
 
             let sql = `SELECT * 
                 FROM locations
-                WHERE id_lo = ${data.location} AND device_id = ${data.device}`;
+                WHERE device_id = ${data.device}`;
             let [res] = await connection.query(sql);
 
             connection.end();

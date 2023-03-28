@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const mysql = require('mysql2/promise');
 const express = require("express");
 const cors = require("cors");
@@ -9,13 +10,15 @@ app.use(cors());
 // Konstanty
 const constants = require('../const');
 
-class ReportsDao {
-    async AddReport(data, location_id) {
+class LocationsDao {
+    async GetLocationByDevice(id) {
         try {
             const connection = await this._connectDBSync();
 
-            let sql = `INSERT INTO reports(id_re, location_id, temperature, humidity, date)
-                VALUES(NULL, ${location_id}, ${data.temperature}, ${data.humidity}, '${data.date}')`;
+            let sql = `SELECT l.id_lo AS 'location_id'
+                FROM locations l
+                JOIN devices d ON d.id_de = l.device_id
+                WHERE d.device = '${id}'`;
             let [res] = await connection.query(sql);
 
             connection.end();
@@ -40,4 +43,4 @@ class ReportsDao {
     }
 }
 
-module.exports = ReportsDao;
+module.exports = LocationsDao;

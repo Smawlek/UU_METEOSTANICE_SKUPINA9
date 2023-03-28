@@ -1,16 +1,17 @@
 const Ajv = require("ajv").default;
 const ReportsDao = require("../../dao/reports-dao");
+const LocationsDao = require("../../dao/locations-dao");
 let dao = new ReportsDao();
+let location_dao = new LocationsDao();
 
 let schema = {
     "type": "object",
     "properties": {
-        "location": { "type": "number" },
         "temperature": { "type": "number" },
         "humidity": { "type": "number" },
         "date": { "type": "string" },
     },
-    "required": ["location", "temperature", "humidity", "date"]
+    "required": ["temperature", "humidity", "date"]
 };
 
 const allowedRoles = [0];
@@ -20,7 +21,6 @@ async function AddReportAbl(req, res) {
         const ajv = new Ajv();
         const body = req.query.location ? req.query : req.body;
 
-        body.location = Number(body.location);
         body.temperature = parseFloat(body.temperature);
         body.humidity = Number(body.humidity);
 
@@ -32,7 +32,18 @@ async function AddReportAbl(req, res) {
         }
 
         if (valid) {
-            let resp = await dao.AddReport(body);
+            let location_id = await location_dao.GetLocationByDevice(req.token.device_id);
+
+            if (!location_id) {
+                res.status(402).send({
+                    errorMessage: "Zařízení není zaregistrováno a proto nelze přidat záznam",
+                    params: req.body,
+                    reason: ajv.errors
+                });
+                return;
+            }
+
+            let resp = await dao.AddReport(body, location_id);
 
             if (!resp) {
                 res.status(402).send({

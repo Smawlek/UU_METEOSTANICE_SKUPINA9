@@ -41,7 +41,7 @@ async function LogDeviceAbl(req, res) {
             }
 
             if (resp[0].device_id > 0) {
-                let temp = {location_id: resp[0].location_id, device_id: resp[0].device_id, role: 0};
+                let temp = {device_id: resp[0].device_id, role: 0};
                 resp = JSON.parse(resp)
                 resp[0].token = jwt.sign(temp, process.env.ACCESS_TOKEN_SECRET);
                 resp = JSON.stringify(resp);
