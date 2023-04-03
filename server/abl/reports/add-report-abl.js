@@ -20,12 +20,13 @@ async function AddReportAbl(req, res) {
     try {
         const ajv = new Ajv();
         const body = req.query.location ? req.query : req.body;
-
+        console.log(body)
         body.temperature = parseFloat(body.temperature);
-        body.humidity = Number(body.humidity);
+        body.humidity = parseFloat(body.humidity);
 
         const valid = ajv.validate(schema, body);
-
+        console.log(body)
+        console.log(valid)
         if (!allowedRoles.includes(req.token.role)) {
             res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
             return;

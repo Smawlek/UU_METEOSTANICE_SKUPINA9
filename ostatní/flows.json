@@ -1,0 +1,152 @@
+[
+    {
+        "id": "72799e6dab334a86",
+        "type": "tab",
+        "label": "Flow 4 - Dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6aae75535e908171",
+        "type": "link in",
+        "z": "72799e6dab334a86",
+        "name": "link in 5",
+        "links": [
+            "ddc5f64b438fd8dc"
+        ],
+        "x": 95,
+        "y": 160,
+        "wires": [
+            [
+                "762d8e101b31887a",
+                "cee38e18ca34c98b"
+            ]
+        ]
+    },
+    {
+        "id": "f4778d24819af6e0",
+        "type": "ui_gauge",
+        "z": "72799e6dab334a86",
+        "name": "Tepmerature",
+        "group": "6c84a2e183120183",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Teplota v místnosti",
+        "label": "Celsius",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "35",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 370,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "762d8e101b31887a",
+        "type": "function",
+        "z": "72799e6dab334a86",
+        "name": "function 1",
+        "func": "\nreturn parseFloat(msg.payload.humidity);",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 160,
+        "wires": [
+            [
+                "f4778d24819af6e0"
+            ]
+        ]
+    },
+    {
+        "id": "cee38e18ca34c98b",
+        "type": "function",
+        "z": "72799e6dab334a86",
+        "name": "function 2",
+        "func": "\nreturn parseFloat(msg.payload.humidity);",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 220,
+        "wires": [
+            [
+                "b2ac9aa9d826f926"
+            ]
+        ]
+    },
+    {
+        "id": "b2ac9aa9d826f926",
+        "type": "ui_gauge",
+        "z": "72799e6dab334a86",
+        "name": "Humidity",
+        "group": "169b72ad6166ef12",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Vlhkost vzduchu v místnosti",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "30",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 360,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6c84a2e183120183",
+        "type": "ui_group",
+        "name": "Teplota",
+        "tab": "eba1ec023a036854",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "169b72ad6166ef12",
+        "type": "ui_group",
+        "name": "Vlhkost vzduchu",
+        "tab": "eba1ec023a036854",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "eba1ec023a036854",
+        "type": "ui_tab",
+        "name": "Temperature",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
