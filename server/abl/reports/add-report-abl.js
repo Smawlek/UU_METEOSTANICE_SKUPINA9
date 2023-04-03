@@ -25,14 +25,14 @@ async function AddReportAbl(req, res) {
         body.humidity = Number(body.humidity);
 
         const valid = ajv.validate(schema, body);
-        
+
         if (!allowedRoles.includes(req.token.role)) {
             res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
             return;
         }
 
         if (valid) {
-            let location_id = await location_dao.GetLocationByDevice(req.token.device_id);
+            let location_id = (await location_dao.GetLocationByDevice(req.token.device_id))[0].location_id;
 
             if (!location_id) {
                 res.status(402).send({
@@ -54,10 +54,8 @@ async function AddReportAbl(req, res) {
                 return;
             }
 
-            if (resp.length > 0) {
-                res.status(200).send(resp);
-                return;
-            }
+            res.status(200).send(resp);
+            return;
         }
 
         res.status(401).send({

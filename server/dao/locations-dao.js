@@ -17,13 +17,12 @@ class LocationsDao {
 
             let sql = `SELECT l.id_lo AS 'location_id'
                 FROM locations l
-                JOIN devices d ON d.id_de = l.device_id
-                WHERE d.device = '${id}'`;
+                WHERE l.device_id = '${id}'`;
             let [res] = await connection.query(sql);
 
             connection.end();
 
-            return JSON.stringify(res);
+            return res;
         } catch (error) {
             console.log(error);
         }

@@ -16,8 +16,8 @@ class DevicesDao {
             const connection = await this._connectDBSync();
 
             let sql = `SELECT * 
-                FROM locations
-                WHERE device_id = ${data.device}`;
+                FROM devices
+                WHERE id_de = ${data.device}`;
             let [res] = await connection.query(sql);
 
             connection.end();
@@ -43,7 +43,7 @@ class DevicesDao {
 
             connection.end();
 
-            return JSON.stringify(res);
+            return res;
         } catch (error) {
             console.log(error);
         }

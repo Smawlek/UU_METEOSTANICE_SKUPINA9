@@ -15,7 +15,8 @@ async function PingDeviceAbl(req, res) {
     const ajv = new Ajv();
 
     if (!allowedRoles.includes(req.token.role)) {
-        res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
+        res.status(200).send({ response: false });
+        //res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
         return;
     }
 
@@ -31,10 +32,8 @@ async function PingDeviceAbl(req, res) {
             return;
         }
 
-        if (resp.length > 0) {
-            res.status(200).send(resp);
-            return;
-        }
+        res.status(200).send(resp);
+        return;
     } catch (e) {
         res.status(500).send({
             errorMessage: "Neočekávaná chyba: " + e,

@@ -9,19 +9,22 @@ module.exports = Object.freeze({
 });
 
 function authenticateToken(req, res, next) {
+    //console.log(req.headers)
     const token = req.headers.token;
-
-    if(token === null) {
+    //console.log(token)
+    if (token === null) {
         res.sendStatus(401);
     }
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if(err) {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, data) => {
+        //console.log(data)
+        if (err) {
+            console.log("Token err: " + err)
             return res.sendStatus(403);
         }
 
-        req.token = user[0];
-        
+        req.token = data;
+
         next();
     })
 }
