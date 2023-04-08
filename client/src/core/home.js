@@ -15,7 +15,7 @@ const Home = () => {
                     <div className='card-body p-5'>
                         <h1> <u> Dashboard </u> </h1>
                         <div className='new-line'></div>
-                        <Dashboard />
+                        <Dashboard public_tokens={['cbKwZmB1Ez1RA']} />
                     </div>
                 </div>
             </div>

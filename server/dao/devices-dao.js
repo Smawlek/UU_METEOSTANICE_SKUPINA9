@@ -49,6 +49,25 @@ class DevicesDao {
         }
     }
 
+    async LogPublic(data) {
+        try {
+            const token = crypto.createHash('md5').update(data.public_token).digest("hex");
+            const connection = await this._connectDBSync();
+
+            let sql = `SELECT l.id_lo AS 'location_id', d.id_de AS 'device_id' 
+                FROM locations l
+                JOIN devices d ON d.id_de = l.device_id
+                WHERE l.publicToken = '${token}'`;
+            let [res] = await connection.query(sql);
+
+            connection.end();
+
+            return res;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async _connectDBSync() {
         let connectionSync = mysql.createPool(
             {

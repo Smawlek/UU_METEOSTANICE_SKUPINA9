@@ -7,27 +7,25 @@ let location_dao = new LocationsDao();
 let schema = {
     "type": "object",
     "properties": {
-        "temperature": { "type": "number" },
-        "humidity": { "type": "number" },
-        "date": { "type": "string" },
+        "start": { "type": "string" }, 
+        "end": { "type": "string" },
+        "granularity": { "type": "number" },
     },
-    "required": ["temperature", "humidity", "date"]
+    "required": ["start", "end"]
 };
 
 const allowedRoles = [0];
 
-async function AddReportAbl(req, res) {
+async function GetReportsByDatesAbl(req, res) {
     try {
         const ajv = new Ajv();
-        const body = req.query.location ? req.query : req.body;
-        console.log(body)
-        body.temperature = parseFloat(body.temperature);
-        body.humidity = parseFloat(body.humidity);
+        const body = req.query.start ? req.query : req.body;
+
+        body.granularity = Number(body.granularity);
 
         const valid = ajv.validate(schema, body);
-        console.log(body)
-        console.log(valid)
-        if (!allowedRoles.includes(req.token.role) || req.token.isPublicToken) {
+
+        if (!allowedRoles.includes(req.token.role)) {
             res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
             return;
         }
@@ -37,14 +35,14 @@ async function AddReportAbl(req, res) {
 
             if (!location_id) {
                 res.status(402).send({
-                    errorMessage: "Zařízení není zaregistrováno a proto nelze přidat záznam",
+                    errorMessage: "Zařízení není zaregistrováno a proto nelze získat záznamy",
                     params: req.body,
                     reason: ajv.errors
                 });
                 return;
             }
 
-            let resp = await dao.AddReport(body, location_id);
+            let resp = await dao.GetReportsByDates(body, location_id);
 
             if (!resp) {
                 res.status(402).send({
@@ -71,4 +69,4 @@ async function AddReportAbl(req, res) {
     }
 }
 
-module.exports = AddReportAbl;
+module.exports = GetReportsByDatesAbl;

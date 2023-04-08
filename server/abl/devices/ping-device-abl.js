@@ -14,7 +14,7 @@ const allowedRoles = [0];
 async function PingDeviceAbl(req, res) {
     const ajv = new Ajv();
 
-    if (!allowedRoles.includes(req.token.role)) {
+    if (!allowedRoles.includes(req.token.role) || req.token.isPublicToken) {
         res.status(200).send({ response: false });
         //res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
         return;

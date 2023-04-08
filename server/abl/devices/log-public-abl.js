@@ -9,18 +9,17 @@ const jwt = require('jsonwebtoken');
 let schema = {
     "type": "object",
     "properties": {
-        "password": { "type": "string" },
-        "device": { "type": "string" },
+        "public_token": { "type": "string" },
     },
-    "required": ["password", "device"]
+    "required": ["public_token"]
 };
 
 const allowedRoles = [];
 
-async function LogDeviceAbl(req, res) {
+async function LogPublicAbl(req, res) {
     try {
         const ajv = new Ajv();
-        const body = req.query.password ? req.query : req.body;
+        const body = req.query.public_token ? req.query : req.body;
         const valid = ajv.validate(schema, body);
         /*
         if (!allowedRoles.includes(req.token.role)) {
@@ -29,7 +28,7 @@ async function LogDeviceAbl(req, res) {
         }*/
 
         if (valid) {
-            let resp = await dao.LogDevice(body);
+            let resp = await dao.LogPublic(body);
 
             if (!resp) {
                 res.status(402).send({
@@ -41,7 +40,7 @@ async function LogDeviceAbl(req, res) {
             }
 
             if (resp[0].device_id > 0) {
-                let temp = {device_id: resp[0].device_id, role: 0, isPublicToken: false};
+                let temp = {device_id: resp[0].device_id, role: 0, isPublicToken: true};
                 resp[0].token = jwt.sign(temp, process.env.ACCESS_TOKEN_SECRET);
                 resp = JSON.stringify(resp);
                 res.status(200).send(resp);
@@ -61,4 +60,4 @@ async function LogDeviceAbl(req, res) {
     }
 }
 
-module.exports = LogDeviceAbl;
+module.exports = LogPublicAbl;
