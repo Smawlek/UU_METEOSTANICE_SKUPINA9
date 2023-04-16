@@ -32,11 +32,11 @@ async function PingDeviceAbl(req, res) {
             return;
         }
 
-        res.status(200).send(resp);
+        res.status(200).send({ response: true });
         return;
     } catch (e) {
         res.status(500).send({
-            errorMessage: "Neočekávaná chyba: " + e,
+            errorMessage: "Unknown error: " + e,
             params: req.body,
             reason: ajv.errors
         })

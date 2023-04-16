@@ -22,11 +22,6 @@ async function LogDeviceAbl(req, res) {
         const ajv = new Ajv();
         const body = req.query.password ? req.query : req.body;
         const valid = ajv.validate(schema, body);
-        /*
-        if (!allowedRoles.includes(req.token.role)) {
-            res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
-            return;
-        }*/
 
         if (valid) {
             let resp = await dao.LogDevice(body);

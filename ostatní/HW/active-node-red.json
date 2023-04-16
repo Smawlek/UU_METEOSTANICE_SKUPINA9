@@ -1,0 +1,174 @@
+[
+    {
+        "id": "4ef45ef7557a9890",
+        "type": "tab",
+        "label": "Flow 1 - Načtení dat",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3cc225bfc6075bf1",
+        "type": "function",
+        "z": "4ef45ef7557a9890",
+        "name": "Prepare data",
+        "func": "let temp = (msg.payload.split(\",\"));\nlet temperature = (temp[0]).toString();\nlet humid = (temp[1]).toString();\nlet d = msg.date\n\nreturn {\n    topic: `INSERT INTO data VALUES(NULL, $temperature, $humidity, $date)`,\n    payload: [\n        temperature,\n        humid,\n        d\n    ]\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 140,
+        "wires": [
+            [
+                "76eb967c4e20b0d8",
+                "6edcc17a1283c5ae"
+            ]
+        ]
+    },
+    {
+        "id": "76eb967c4e20b0d8",
+        "type": "debug",
+        "z": "4ef45ef7557a9890",
+        "name": "check formatted data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ceea3b1efa7841aa",
+        "type": "inject",
+        "z": "4ef45ef7557a9890",
+        "name": "",
+        "props": [
+            {
+                "p": "date",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "payload.time",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 140,
+        "wires": [
+            [
+                "7a81cb39c8b809ed"
+            ]
+        ]
+    },
+    {
+        "id": "7a81cb39c8b809ed",
+        "type": "serial request",
+        "z": "4ef45ef7557a9890",
+        "name": "",
+        "serial": "b1faee37ee670a28",
+        "x": 210,
+        "y": 140,
+        "wires": [
+            [
+                "cc86feefdcf37658"
+            ]
+        ]
+    },
+    {
+        "id": "6edcc17a1283c5ae",
+        "type": "sqlite",
+        "z": "4ef45ef7557a9890",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "INSERT INTO db",
+        "x": 710,
+        "y": 140,
+        "wires": [
+            [
+                "fbcefaef4d3dff27"
+            ]
+        ]
+    },
+    {
+        "id": "fbcefaef4d3dff27",
+        "type": "debug",
+        "z": "4ef45ef7557a9890",
+        "name": "sql check",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "cc86feefdcf37658",
+        "type": "moment",
+        "z": "4ef45ef7557a9890",
+        "name": "format date",
+        "topic": "",
+        "input": "date",
+        "inputType": "msg",
+        "inTz": "Europe/Prague",
+        "adjAmount": 0,
+        "adjType": "days",
+        "adjDir": "add",
+        "format": "YYYY-MM-DD HH:mm:SS",
+        "locale": "cs-CZ",
+        "output": "date",
+        "outputType": "msg",
+        "outTz": "Europe/Prague",
+        "x": 350,
+        "y": 140,
+        "wires": [
+            [
+                "3cc225bfc6075bf1"
+            ]
+        ]
+    },
+    {
+        "id": "b1faee37ee670a28",
+        "type": "serial-port",
+        "serialport": "COM3",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "faabbd43a4fc0896",
+        "type": "sqlitedb",
+        "db": "C:\\Users\\ondra\\Desktop\\UU_METEOSTANICE_SKUPINA9\\ostatní\\db",
+        "mode": "RWC"
+    }
+]

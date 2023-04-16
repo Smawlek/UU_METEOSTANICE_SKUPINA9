@@ -21,11 +21,6 @@ async function LogPublicAbl(req, res) {
         const ajv = new Ajv();
         const body = req.query.public_token ? req.query : req.body;
         const valid = ajv.validate(schema, body);
-        /*
-        if (!allowedRoles.includes(req.token.role)) {
-            res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
-            return;
-        }*/
 
         if (valid) {
             let resp = await dao.LogPublic(body);

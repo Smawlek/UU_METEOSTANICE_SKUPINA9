@@ -68,6 +68,23 @@ class DevicesDao {
         }
     }
 
+    async GetDeviceActivity(id) {
+        try {
+            const connection = await this._connectDBSync();
+
+            let sql = `SELECT isActive 
+                FROM devices
+                WHERE id_de = ${id}`;
+            let [res] = await connection.query(sql);
+
+            connection.end();
+
+            return res;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async _connectDBSync() {
         let connectionSync = mysql.createPool(
             {

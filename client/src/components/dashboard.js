@@ -118,6 +118,7 @@ const Dashboard = ({ public_tokens, units }) => {
         chechGranularity();
         // Získání dat
         data = await _getReportsByDates(setFilters);
+        console.log(data)
         // Vyfiltrování
         filterData();
     }
@@ -216,7 +217,7 @@ const Filter = ({ show, data, handleClose, change }) => {
             keyboard={false}
         >
             <Modal.Header closeButton>
-                <Modal.Title> Úprava  </Modal.Title>
+                <Modal.Title> Nastavení filtrů  </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className='row'>
@@ -251,7 +252,7 @@ const Filter = ({ show, data, handleClose, change }) => {
                 <div className='row'>
                     <div className='col-sm-12 col-md-12 col-lg-6'>
                         <div className='col'>
-                            <label> Filtry: </label>
+                            <label> Granularita: </label>
                             <Select
                                 aria-labelledby="aria-label"
                                 inputId="aria-example-input"

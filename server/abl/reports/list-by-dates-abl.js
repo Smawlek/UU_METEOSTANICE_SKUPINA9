@@ -26,7 +26,7 @@ async function GetReportsByDatesAbl(req, res) {
         const valid = ajv.validate(schema, body);
 
         if (!allowedRoles.includes(req.token.role)) {
-            res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
+            res.status(403).send({ errorMessage: "Unauthorized", params: req.body })
             return;
         }
 

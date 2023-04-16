@@ -28,7 +28,7 @@ class ReportsDao {
 
     async GetReportsByDates(data, location_id) {
         try {
-            const limit = data.granularity === NaN ? '999' : data.granularity === 0 ? 12 : data.granularity === 1 ? 360 : data.granularity === 2 ? 840 : data.granularity === 3 ? 1680 : data.granularity === 4 ? 3600 : 10800;
+            const limit = data.granularity === NaN ? 999 : data.granularity === 0 ? 12 : data.granularity === 1 ? 360 : data.granularity === 2 ? 840 : data.granularity === 3 ? 1680 : data.granularity === 4 ? 3600 : 10800;
             const connection = await this._connectDBSync();
 
             let sql = `SELECT * 
@@ -36,6 +36,7 @@ class ReportsDao {
                 WHERE location_id = ${location_id} && date >= '${(data.start).trim() + ' 00:00:00'}' && date <= '${(data.end).trim() + ' 23:59:59'}'
                 ORDER BY date ASC
                 LIMIT ${limit}`;
+                console.log(sql)
             let [res] = await connection.query(sql);
 
             connection.end();

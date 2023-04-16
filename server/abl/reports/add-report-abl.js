@@ -1,8 +1,10 @@
 const Ajv = require("ajv").default;
 const ReportsDao = require("../../dao/reports-dao");
 const LocationsDao = require("../../dao/locations-dao");
-let dao = new ReportsDao();
-let location_dao = new LocationsDao();
+const DevicesDao = require("../../dao/devices-dao");
+const dao = new ReportsDao();
+const location_dao = new LocationsDao();
+const devices_dao = new DevicesDao();
 
 let schema = {
     "type": "object",
@@ -20,24 +22,32 @@ async function AddReportAbl(req, res) {
     try {
         const ajv = new Ajv();
         const body = req.query.location ? req.query : req.body;
-        console.log(body)
+
         body.temperature = parseFloat(body.temperature);
         body.humidity = parseFloat(body.humidity);
 
         const valid = ajv.validate(schema, body);
-        console.log(body)
-        console.log(valid)
+
         if (!allowedRoles.includes(req.token.role) || req.token.isPublicToken) {
-            res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
+            res.status(403).send({ errorMessage: "Unauthorized", params: req.body })
             return;
         }
 
         if (valid) {
+            // Ověření aktivity zařízení
+            if(!(await devices_dao.GetDeviceActivity(req.token.device_id))[0].isActive) {
+                res.status(402).send({
+                    errorMessage: "Device is not active and can not add new report",
+                    params: req.body,
+                    reason: ajv.errors
+                });
+            }
+
             let location_id = (await location_dao.GetLocationByDevice(req.token.device_id))[0].location_id;
 
             if (!location_id) {
                 res.status(402).send({
-                    errorMessage: "Zařízení není zaregistrováno a proto nelze přidat záznam",
+                    errorMessage: "Device is not registered to any locations because that it can not add new report",
                     params: req.body,
                     reason: ajv.errors
                 });
@@ -66,7 +76,11 @@ async function AddReportAbl(req, res) {
         })
         return;
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send({
+            errorMessage: "Unknown error: " + e,
+            params: body,
+            reason: ajv.errors
+        })
         return;
     }
 }
