@@ -1,0 +1,2 @@
+FE: https://uu-meteostanice-skupina9.netlify.app
+BE: https://testing-heroku-dobest.herokuapp.com

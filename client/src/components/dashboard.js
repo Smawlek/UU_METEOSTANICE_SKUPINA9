@@ -17,7 +17,7 @@ import Axios from 'axios';
 const source = Axios.CancelToken.source();
 const config = { cancelToken: source.token };
 // Konstanty
-const SERVER_BASE_URL = "http://localhost:4000";
+const SERVER_BASE_URL = /*"http://localhost:4000" */ "https://testing-heroku-dobest.herokuapp.com";
 
 const Dashboard = ({ public_tokens, units }) => {
     let unitsSign = '°C';
