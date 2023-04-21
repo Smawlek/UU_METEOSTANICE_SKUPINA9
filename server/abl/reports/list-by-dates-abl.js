@@ -35,7 +35,7 @@ async function GetReportsByDatesAbl(req, res) {
 
             if (!location_id) {
                 res.status(402).send({
-                    errorMessage: "Zařízení není zaregistrováno a proto nelze získat záznamy",
+                    errorMessage: "Device is not registered to any locations because that it can not retrieve any data",
                     params: req.body,
                     reason: ajv.errors
                 });
@@ -44,21 +44,12 @@ async function GetReportsByDatesAbl(req, res) {
 
             let resp = await dao.GetReportsByDates(body, location_id);
 
-            if (!resp) {
-                res.status(402).send({
-                    errorMessage: "Chybný dotaz na server",
-                    params: req.body,
-                    reason: ajv.errors
-                });
-                return;
-            }
-
             res.status(200).send(resp);
             return;
         }
 
         res.status(401).send({
-            errorMessage: "Ověření údajů se nezdařilo. Chybné údaje",
+            errorMessage: "Data verification failed. Wrong data",
             params: body,
             reason: ajv.errors
         })

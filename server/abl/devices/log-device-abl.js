@@ -26,15 +26,6 @@ async function LogDeviceAbl(req, res) {
         if (valid) {
             let resp = await dao.LogDevice(body);
 
-            if (!resp) {
-                res.status(402).send({
-                    errorMessage: "Chybný dotaz na server",
-                    params: req.body,
-                    reason: ajv.errors
-                });
-                return;
-            }
-
             if (resp[0].device_id > 0) {
                 let temp = {device_id: resp[0].device_id, role: 0, isPublicToken: false};
                 resp[0].token = jwt.sign(temp, process.env.ACCESS_TOKEN_SECRET);
@@ -42,10 +33,17 @@ async function LogDeviceAbl(req, res) {
                 res.status(200).send(resp);
                 return;
             }
+
+            res.status(401).send({
+                errorMessage: "Log in failed. Device does not exist",
+                params: body,
+                reason: ajv.errors
+            });
+            return;
         }
 
         res.status(401).send({
-            errorMessage: "Ověření údajů se nezdařilo. Chybné údaje",
+            errorMessage: "Data verification failed. Wrong data",
             params: body,
             reason: ajv.errors
         })

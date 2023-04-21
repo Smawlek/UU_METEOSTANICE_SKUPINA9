@@ -56,21 +56,12 @@ async function AddReportAbl(req, res) {
 
             let resp = await dao.AddReport(body, location_id);
 
-            if (!resp) {
-                res.status(402).send({
-                    errorMessage: "Chybný dotaz na server",
-                    params: req.body,
-                    reason: ajv.errors
-                });
-                return;
-            }
-
             res.status(200).send(resp);
             return;
         }
 
         res.status(401).send({
-            errorMessage: "Ověření údajů se nezdařilo. Chybné údaje",
+            errorMessage: "Data verification failed. Wrong data",
             params: body,
             reason: ajv.errors
         })

@@ -17,16 +17,18 @@ import Axios from 'axios';
 const source = Axios.CancelToken.source();
 const config = { cancelToken: source.token };
 // Konstanty
-const SERVER_BASE_URL = /*"http://localhost:4000" */ "https://testing-heroku-dobest.herokuapp.com";
+const SERVER_BASE_URL = /*"http://localhost:4000"*/"https://testing-heroku-dobest.herokuapp.com";
 
 const Dashboard = ({ public_tokens, units }) => {
     let unitsSign = '°C';
     let unitsTransfer = 1;
     let stations = [];
     // Stanice
-    let [shownStation, setShownStation] = useState();
-    let data = [];
-    let [shownData, setShownData] = useState();
+    const [shownStation, setShownStation] = useState();
+    const [data, setData] = useState([]);
+    const [shownData, setShownData] = useState();
+    const [temp, setTemp] = useState(0);
+    const [humid, setHumid] = useState(0);
     // Filtry
     const [showFilterModal, setShowFilterModal] = useState(false);
     let setFilters = {
@@ -117,8 +119,7 @@ const Dashboard = ({ public_tokens, units }) => {
         // Ověření
         chechGranularity();
         // Získání dat
-        data = await _getReportsByDates(setFilters);
-        console.log(data)
+        setData(await _getReportsByDates(setFilters));
         // Vyfiltrování
         filterData();
     }
@@ -157,10 +158,14 @@ const Dashboard = ({ public_tokens, units }) => {
     }
 
     function filterData() {
-        //
+        /*
         if (setFilters.granularity === 0) {
             //
-        }
+        }*/
+        console.log(data);
+        setShownData(data.data);
+        //setTemp(data.data[0].temperature);
+        //setHumid(data.data[0].humidity)
     }
 
     function downsample() {
@@ -185,8 +190,8 @@ const Dashboard = ({ public_tokens, units }) => {
                 </div>
                 {/* Tělo */}
                 <div className='row dashboard-body'>
-                    <p> Aktuální teplota: </p>
-                    <p> Aktuální vlhkost: </p>
+                    <p> Aktuální teplota: {temp} {unitsSign} </p>
+                    <p> Aktuální vlhkost: {humid} % </p>
                 </div>
             </div>
 

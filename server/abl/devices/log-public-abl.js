@@ -41,10 +41,17 @@ async function LogPublicAbl(req, res) {
                 res.status(200).send(resp);
                 return;
             }
+
+            res.status(401).send({
+                errorMessage: "Log in failed. Device does not exist",
+                params: body,
+                reason: ajv.errors
+            })
+            return;
         }
 
         res.status(401).send({
-            errorMessage: "Ověření údajů se nezdařilo. Chybné údaje",
+            errorMessage: "Data verification failed. Wrong data",
             params: body,
             reason: ajv.errors
         })

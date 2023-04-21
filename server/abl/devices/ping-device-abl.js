@@ -16,21 +16,11 @@ async function PingDeviceAbl(req, res) {
 
     if (!allowedRoles.includes(req.token.role) || req.token.isPublicToken) {
         res.status(200).send({ response: false });
-        //res.status(403).send({ errorMessage: "Neplatné oprávnění", params: req.body })
         return;
     }
 
     try {
         let resp = await dao.PingDevice({ device: req.token.device_id });
-
-        if (!resp) {
-            res.status(402).send({
-                errorMessage: "Chybný dotaz na server",
-                params: req.body,
-                reason: ajv.errors
-            });
-            return;
-        }
 
         res.status(200).send({ response: true });
         return;
