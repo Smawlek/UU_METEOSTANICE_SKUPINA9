@@ -6,12 +6,12 @@ import { ReactSession } from 'react-client-session';
 const CookiesInfo = () => {
     ReactSession.setStoreType("localStorage");
 
-    const cookies = ReactSession.get("cookies");
+    const cookies = ReactSession.get("meteostanice-cookies");
 
     const [render, setRender] = useState(!cookies);
 
     function setCookies() {
-        ReactSession.set("cookies", true);
+        ReactSession.set("meteostanice-cookies", true);
         setRender(false)
     }
 

@@ -33,10 +33,9 @@ class ReportsDao {
 
             let sql = `SELECT * 
                 FROM reports
-                WHERE location_id = ${location_id} && date >= '${(data.start).trim() + ' 00:00:00'}' && date <= '${(data.end).trim() + ' 23:59:59'}'
+                WHERE location_id = ${location_id} && date >= '${(data.start).trim()}' && date <= '${(data.end).trim()}'
                 ORDER BY date ASC
                 LIMIT ${limit}`;
-                console.log(sql)
             let [res] = await connection.query(sql);
 
             connection.end();

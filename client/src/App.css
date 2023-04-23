@@ -13,6 +13,14 @@
   color: green;
 }
 
+.white {
+  color: white
+}
+
+.bg-black {
+  background-color: black;
+}
+
 .hidden {
   display: none;
 }
@@ -26,6 +34,28 @@
   border-top: 1px solid rgb(168, 167, 180);
   margin-top: 15px;
   padding-bottom: 15px;
+}
+
+.search-result {
+  color: grey;
+  text-align: center;
+  font-size: 30px;
+  margin-top: 20px;
+}
+
+.space {
+  height: 500px;
+}
+
+/* Line Card */
+.linecard-div {
+  border: 1px solid rgb(168, 167, 180);
+  border-radius: 4px;
+  margin-bottom: 11px;
+}
+
+.linecard-div-content {
+  padding: 15px;
 }
 
 /* Dashboard */
@@ -48,6 +78,8 @@
 .dashboard-body {
   padding-left: 10px;
   padding-top: 10px;
+  width: 100%;
+  height: 100%;
 }
 
 /* Footer */
@@ -70,6 +102,94 @@
 
 .layout-divider {
   border-left: 1px solid grey;
+  margin-right: 15px;
+}
+
+/* CookiesInfo */
+.cookie-consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 2147483645;
+  box-sizing: border-box;
+  width: 100%;
+
+  background-color: #F1F6F4;
+}
+
+.cookie-consent-banner__inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.cookie-consent-banner__copy {
+  margin-bottom: 16px;
+}
+
+/*.cookie-consent-banner__actions {} */
+
+.cookie-consent-banner__header {
+  margin-bottom: 8px;
+
+  font-family: "CeraPRO-Bold", sans-serif, arial;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.cookie-consent-banner__description {
+  font-family: "CeraPRO-Regular", sans-serif, arial;
+  font-weight: normal;
+  color: #838F93;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.cookie-consent-banner__cta {
+  box-sizing: border-box;
+  display: inline-block;
+  min-width: 164px;
+  padding: 11px 13px;
+
+  border-radius: 2px;
+
+  background-color: #2CE080;
+
+  color: #FFF;
+  text-decoration: none;
+  text-align: center;
+  font-family: "CeraPRO-Regular", sans-serif, arial;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.cookie-consent-banner__cta--secondary {
+  padding: 9px 13px;
+
+  border: 2px solid #3A4649;
+
+  background-color: transparent;
+
+  color: #2CE080;
+}
+
+.cookie-consent-banner__cta:hover {
+  color: white;
+  background-color: #20BA68;
+}
+
+.cookie-consent-banner__cta--secondary:hover {
+  border-color: #838F93;
+
+  background-color: transparent;
+
+  color: #22C870;
+}
+
+.cookie-consent-banner__cta:last-child {
+  margin-left: 16px;
 }
 
 /* Automaticly generated */

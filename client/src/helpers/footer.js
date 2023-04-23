@@ -13,7 +13,7 @@ const Footer = () => {
 
                             <div className="col-xs-12 col-sm-6 col-md-4">
                                 <div className="widget subscribe no-box">
-                                    <h5 className="widget-title"> METEOSTANICE - SKUPINA 9 <span></span></h5>
+                                    <h5 className="widget-title"> <b> METEOSTANICE - SKUPINA 9 </b> <span></span></h5>
                                     <p></p>
                                     <p> Při poskytování služeb nám pomáhají soubory cookie. Používáním webu vyjadřujete souhlas. </p>
                                 </div>
@@ -21,7 +21,7 @@ const Footer = () => {
 
                             <div className="col-xs-12 col-sm-6 col-md-4 footer-div">
                                 <div className="widget no-box">
-                                    <h5 className="widget-title"> Rychlé odkazy <span></span></h5>
+                                    <h5 className="widget-title"> <b> Rychlé odkazy </b> <span></span></h5>
                                     <ul className="thumbnail-widget">
                                         <li> <div className="thumb-content"> <a href="/"> Domů </a> </div> </li>
                                     </ul>
@@ -35,7 +35,7 @@ const Footer = () => {
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <p> Vytvořeno: Ondřej Koriťák, Lukáš Skřivánek, Nikita Potapov, Patrick Zámyslický, Michal Medek, Martin Horčík </p>
+                                <p> <b> Vytvořeno: </b> Ondřej Koriťák, Lukáš Skřivánek, Nikita Potapov, Patrick Zámyslický, Michal Medek, Martin Horčík </p>
                             </div>
                         </div>
                     </div>

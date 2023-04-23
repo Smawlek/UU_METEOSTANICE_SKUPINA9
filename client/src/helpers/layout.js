@@ -1,34 +1,55 @@
 import '../App.css';
 
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { ReactSession } from 'react-client-session';
+// Bootstrap
+import { Nav, Navbar, NavLink } from "react-bootstrap";
 // Ikony
 import { AiFillHome } from "react-icons/ai";
+import { CgUser } from "react-icons/cg";
+import { BiLogOut, BiLogIn } from "react-icons/bi";
+// Obrázky
+import Logo from '../pics/Logo.png'
+// Konstanty
+ReactSession.setStoreType("localStorage");
+
+const user = ReactSession.get("meteostanice-user");
 
 const Layout = () => {
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-                <div className="container" style={{ margin: 0 }}>
-                    <a className="navbar-brand" href="/">
-                        <span> <b> METEOSTANICE - SKUPINA 9 </b> </span>
-                    </a>
-                </div>
-                <div className="container" style={{ margin: 0 }}>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarResponsive">
-                        <ul className="navbar-nav ml-auto layout-ul layout-ul">
-                            <li className='nav-item'> <a className='nav-link' href={"/"}> <AiFillHome /> Domů </a> </li>
-                            {/*
-                            <div className='dropdown-divider' style={{ border: '1px solid rgba(79, 82, 80)' }}></div>
-                            <li className='nav-item layout-divider'> <a className='nav-link' href={"/nasi-lektori"}>  </a> </li>
-                            */}
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <Navbar collapseOnSelect expand="xl" bg="dark" variant="dark">
+                <Navbar.Brand>
+                    {/* <img src={Logo} alt="Logo METEOSTANICE - SKUPINA 9" className='logo' /> */}
+                    <span> <b> METEOSTANICE - SKUPINA 9 </b> </span>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls={"navbarScroll"} data-bs-target="#navbarScroll" />
+                <Navbar.Collapse>
+                    <Nav className='ms-auto'>
+                        <NavLink eventKey={1} as={Link} to="/"> <AiFillHome /> Domů </NavLink>
+                        {user === undefined ?
+                            <NavLink eventKey={7} as={Link} to="/login">
+                                <span className='layout-divider col-sm-0'></span>
+                                <BiLogIn />  Přihlásit se
+                            </NavLink> :
+                            <>
+                                <NavLink eventKey={6} as={Link} to="/profile">
+                                    <span className='layout-divider col-sm-0'></span>
+                                    <CgUser /> {user.name}
+                                </NavLink>
+                                <NavLink eventKey={6} as={Link} to="/management">
+                                    <span className='layout-divider col-sm-0'></span>
+                                    Správa
+                                </NavLink>
+                                <NavLink eventKey={7} as={Link} to="/signout">
+                                    <span className='layout-divider col-sm-0'></span>
+                                    <BiLogOut />  Odhlásit se
+                                </NavLink>
+                            </>
+                        }
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
             <Outlet />
         </>
     )

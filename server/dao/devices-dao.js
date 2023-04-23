@@ -51,13 +51,12 @@ class DevicesDao {
 
     async LogPublic(data) {
         try {
-            const token = crypto.createHash('md5').update(data.public_token).digest("hex");
             const connection = await this._connectDBSync();
 
-            let sql = `SELECT l.id_lo AS 'location_id', d.id_de AS 'device_id' 
+            let sql = `SELECT l.id_lo AS 'location_id', l.name AS 'location_name', d.id_de AS 'device_id' 
                 FROM locations l
                 JOIN devices d ON d.id_de = l.device_id
-                WHERE l.publicToken = '${token}'`;
+                WHERE l.publicToken = '${data.public_token}'`;
             let [res] = await connection.query(sql);
 
             connection.end();
@@ -75,6 +74,24 @@ class DevicesDao {
             let sql = `SELECT isActive 
                 FROM devices
                 WHERE id_de = ${id}`;
+            let [res] = await connection.query(sql);
+
+            connection.end();
+
+            return res;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async ListUsersDevices(id) {
+        try {
+            const connection = await this._connectDBSync();
+
+            let sql = `SELECT id_de AS 'device_id', device AS 'device_name', isActive,
+                    (SELECT COUNT(id_lo) FROM locations WHERE device_id = 1) AS 'isConnected'
+                FROM devices
+                WHERE owner = ${id}`;
             let [res] = await connection.query(sql);
 
             connection.end();

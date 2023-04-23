@@ -25,15 +25,6 @@ async function LogPublicAbl(req, res) {
         if (valid) {
             let resp = await dao.LogPublic(body);
 
-            if (!resp) {
-                res.status(402).send({
-                    errorMessage: "Chybný dotaz na server",
-                    params: req.body,
-                    reason: ajv.errors
-                });
-                return;
-            }
-
             if (resp[0].device_id > 0) {
                 let temp = {device_id: resp[0].device_id, role: 0, isPublicToken: true};
                 resp[0].token = jwt.sign(temp, process.env.ACCESS_TOKEN_SECRET);

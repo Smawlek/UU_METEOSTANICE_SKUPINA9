@@ -14,7 +14,7 @@ const Title = (props) => {
                 <title> {props.title} | METEOSTANICE </title>
                 <style>{"body { background-color: rgba(3, 198, 252, 0.7); }"}</style>
             </Helmet>
-            {/* <CookiesInfo /> */}
+            <CookiesInfo />
             <Outlet />
         </>
     )

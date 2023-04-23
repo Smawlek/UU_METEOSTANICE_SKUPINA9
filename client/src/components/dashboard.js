@@ -10,34 +10,44 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip'
 import { IconButton } from '@mui/material'
 import Button from '@mui/material/Button';
-// Ikony
+// Rechart
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, LabelList } from 'recharts';
+// Ikony 
 import { BsFillGearFill } from "react-icons/bs";
+import { FiRefreshCcw } from "react-icons/fi";
 // Axios
 import Axios from 'axios';
 const source = Axios.CancelToken.source();
 const config = { cancelToken: source.token };
 // Konstanty
-const SERVER_BASE_URL = /*"http://localhost:4000"*/"https://testing-heroku-dobest.herokuapp.com";
+const SERVER_BASE_URL = /*"http://localhost:4000" */"https://testing-heroku-dobest.herokuapp.com";
+// Ostatní proměnné
+let setFilters = {
+    start: moment(Date.now()).subtract(30, 'days').format('YYYY-MM-DD'),
+    startTime: '00:00',
+    end: moment(Date.now()).format('YYYY-MM-DD'),
+    endTime: '23:59',
+    granularity: 4 // 0 - 1 min, 1 - 5 min, 2 - 10 min, 3 - 30 min, 4 - 1 h, 5 - 1 den
+}
+let stations = [];
+let unitsSign = '°C';
+let unitsTransfer = 1;
+let called = false;
 
 const Dashboard = ({ public_tokens, units }) => {
-    let unitsSign = '°C';
-    let unitsTransfer = 1;
-    let stations = [];
     // Stanice
     const [shownStation, setShownStation] = useState();
     const [data, setData] = useState([]);
-    const [shownData, setShownData] = useState();
+    const [shownData, setShownData] = useState("");
     const [temp, setTemp] = useState(0);
     const [humid, setHumid] = useState(0);
     // Filtry
     const [showFilterModal, setShowFilterModal] = useState(false);
-    let setFilters = {
-        start: moment(Date.now()).subtract(3, 'months').format('YYYY-MM-DD'),
-        end: moment(Date.now()).format('YYYY-MM-DD'),
-        granularity: 5 // 0 - 1 min, 1 - 5 min, 2 - 10 min, 3 - 30 min, 4 - 1 h, 5 - 1 den
-    }
     // UseEffecty
     useEffect(() => {
+        
+        called = true;
+        // Nastavení jednotek
         setUnitsVariables(units);
         // Získání přístupu ke stanicím
         checkStations();
@@ -46,6 +56,12 @@ const Dashboard = ({ public_tokens, units }) => {
     useEffect(() => {
         getData();
     }, [shownStation])
+
+    useEffect(() => {
+        if (data.length <= 0) return;
+        // Vyfiltrování
+        filterData(data);
+    }, [data])
     // Axios Calls
     const _logDevice = async (data) => {
         try {
@@ -70,8 +86,8 @@ const Dashboard = ({ public_tokens, units }) => {
                     token: shownStation,
                 },
                 params: {
-                    start: data.start,
-                    end: data.end,
+                    start: data.start + " " + data.startTime + ":00",
+                    end: data.end + " " + data.endTime + ":59",
                     granularity: Number(data.granularity)
                 },
                 config
@@ -91,37 +107,42 @@ const Dashboard = ({ public_tokens, units }) => {
     }
 
     async function checkStations() {
+        let arr = [];
+
         if (public_tokens === undefined || public_tokens.length <= 0) return;
 
         for (let i = 0; i < public_tokens.length; i++) {
             let temp = (await _logDevice({ token: public_tokens[i] })).data[0];
 
             if (temp != undefined) {
-                stations.push(temp.token);
+                arr.push({ label: temp.location_name, value: temp.token });
 
                 if (i === 0) setShownStation(temp.token);
             }
         }
+
+        stations = arr;
     }
 
-    function changeFilters(data, dateChanged) {
-        setFilters = data;
+    function changeFilters(filter, dateChanged) {
+        setFilters = filter;
 
         if (dateChanged) {
             getData();
             return;
         }
 
-        filterData();
+        filterData(data);
     }
 
     async function getData() {
+        setShownData("");
         // Ověření
         chechGranularity();
         // Získání dat
-        setData(await _getReportsByDates(setFilters));
-        // Vyfiltrování
-        filterData();
+        if(shownStation === undefined) return;
+        const temp = (await _getReportsByDates(setFilters));
+        setData(temp.data);
     }
 
     function chechGranularity() {
@@ -157,19 +178,80 @@ const Dashboard = ({ public_tokens, units }) => {
         }
     }
 
-    function filterData() {
-        /*
-        if (setFilters.granularity === 0) {
-            //
-        }*/
-        console.log(data);
-        setShownData(data.data);
-        //setTemp(data.data[0].temperature);
-        //setHumid(data.data[0].humidity)
+    async function filterData(arr) {
+        let finalData = [];
+        // granularita | 0 - 1 min, 1 - 5 min, 2 - 10 min, 3 - 30 min, 4 - 1 h, 5 - 1 den
+        switch (setFilters.granularity) {
+            case 0:
+                finalData = await upsample(arr);
+                break;
+            case 1:
+                finalData = await skip(arr, 1);
+                break;
+            case 2:
+                finalData = await skip(arr, 2)
+                break;
+            case 3:
+                finalData = await skip(arr, 6)
+                break;
+            case 4:
+                finalData = await skip(arr, 12);
+                break;
+            case 5:
+                finalData = await skip(arr, 12 * 24);
+                break;
+            default:
+                break;
+        }
+
+        setShownData(finalData);
+        setTemp(finalData[finalData.length - 1].temperature);
+        setHumid(finalData[finalData.length - 1].humidity)
     }
 
-    function downsample() {
-        //
+    function upsample(arr) {
+        let finalArr = [];
+        let divT = 0;
+        let divH = 0;
+
+        for (let i = 0; i < arr.length; i++) {
+            // První
+            finalArr.push({
+                temperature: arr[i].temperature * unitsTransfer,
+                humidity: arr[i].humidity,
+                date: moment(arr[i].date).format('DD.MM.YY HH:mm:ss')
+            });
+            // Kontrola zda není poslední
+            if (i < arr.length - 1) {
+                // Výpočet rozdílů
+                divT = arr[i].temperature - arr[i + 1].temperature;
+                divH = arr[i].humidity - arr[i + 1].humidity;
+                // Přidání neznámých dat
+                for (let j = 1; j <= 4; j++) {
+                    finalArr.push({
+                        temperature: (arr[i].temperature - j * (divT / 5)) * unitsTransfer,
+                        humidity: arr[i].humidity - j * (divH / 5),
+                        date: moment(arr[i].date).add(j, 'minutes').format('DD.MM.YY HH:mm:ss')
+                    });
+                }
+            }
+        }
+
+        return finalArr
+    }
+
+    function skip(arr, every) {
+        let fin = [];
+
+        for (let i = 0; i < arr.length; i = i + every) {
+            fin.push({
+                temperature: arr[i].temperature * unitsTransfer,
+                humidity: arr[i].humidity,
+                date: moment(arr[i].date).format('DD.MM.YY HH:mm:ss')
+            });
+        }
+
+        return fin;
     }
 
     return (
@@ -177,11 +259,30 @@ const Dashboard = ({ public_tokens, units }) => {
             <div className='dashboard-container'>
                 {/* Horní bar */}
                 <div className='row dashboard-header mx-auto'>
-                    <div className='col-sm-12 col-md-12 col-lg-11'>
+                    <div className='col-sm-12 col-md-12 col-lg-7'>
                         <h3> <b> Měření teploty </b> </h3>
                     </div>
+                    <div className='col-sm-12 col-md-12 col-lg-3'>
+                        {stations.length <= 1 ? '' :
+                            <Select
+                                aria-labelledby="aria-label"
+                                inputId="aria-example-input"
+                                name="aria-live-color"
+                                placeholder="Vyberte stanici"
+                                onChange={(selected) => { setShownStation(selected.value); }}
+                                options={stations}
+                            />
+                        }
+                    </div>
                     <div className='dashboard-header-controls col-sm-12 col-md-12 col-lg-1'>
-                        <Tooltip title={"Nastavit filtry"} placement='left'>
+                        <Tooltip title={"Obnovit"} placement='top'>
+                            <IconButton onClick={() => { getData() }}>
+                                <FiRefreshCcw />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                    <div className='dashboard-header-controls col-sm-12 col-md-12 col-lg-1'>
+                        <Tooltip title={"Nastavit filtry"} placement='top'>
                             <IconButton onClick={() => { setShowFilterModal(!showFilterModal) }}>
                                 <BsFillGearFill />
                             </IconButton>
@@ -189,10 +290,39 @@ const Dashboard = ({ public_tokens, units }) => {
                     </div>
                 </div>
                 {/* Tělo */}
-                <div className='row dashboard-body'>
-                    <p> Aktuální teplota: {temp} {unitsSign} </p>
-                    <p> Aktuální vlhkost: {humid} % </p>
-                </div>
+                {shownData === "" ?
+                    <div className="col-sm-12 col-md-12 col-lg-12 mx-auto search-result"> <p> <b> DATA SE NAČÍTAJÍ </b> </p> </div> :
+                    shownData <= 0 ?
+                        <div className="col-sm-12 col-md-12 col-lg-12 mx-auto search-result"> <p> <b> ŽÁDNÉ VÝSLEDKY </b> </p> </div> :
+                        <div className='row dashboard-body'>
+                            <div className='col-sm-12 col-md-12 col-lg-5 mx-auto'>
+                                <span> Aktuální teplota: {temp} {unitsSign}  |  Aktuální vlhkost: {humid} % </span>
+                            </div>
+                            <div
+                                style={{
+                                    width: "100%",
+                                    padding: "10px",
+                                    maxWidth: "1000px",
+                                    margin: "10px auto"
+                                }}
+                            >
+                                <ResponsiveContainer height={300}>
+                                    <LineChart data={shownData}>
+                                        <XAxis dataKey="date" />
+                                        <YAxis type="number" domain={[-50, 50]} />
+                                        <CartesianGrid stroke="#eee" />
+                                        <Legend />
+                                        <Line type="monotone" name='Teplota' dataKey="temperature" stroke="#8884d8" isAnimationActive={false}>
+                                            {setFilters.granularity > 3 ? <LabelList dataKey="temperature" position="top" /> : ""}
+                                        </Line>
+                                        <Line type="monotone" name='Vlhkost vzduchu' dataKey="humidity" stroke="#82ca9d" isAnimationActive={false}>
+                                            {setFilters.granularity > 3 ? <LabelList dataKey="humidity" position="top" /> : ""}
+                                        </Line>
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                }
             </div>
 
             <Filter show={showFilterModal} data={setFilters} handleClose={() => { setShowFilterModal(false) }} change={changeFilters} />
@@ -203,7 +333,9 @@ const Dashboard = ({ public_tokens, units }) => {
 
 const Filter = ({ show, data, handleClose, change }) => {
     const [start, setStart] = useState(data.start);
+    const [startTime, setStartTime] = useState(data.startTime);
     const [end, setEnd] = useState(data.end);
+    const [endTime, setEndTime] = useState(data.endTime);
     const [granularity, setGranularity] = useState(data.granularity);
     const [dateChanged, setDateChanged] = useState(false)
     // Možnosti v Selectech
@@ -226,10 +358,11 @@ const Filter = ({ show, data, handleClose, change }) => {
             </Modal.Header>
             <Modal.Body>
                 <div className='row'>
+                    <h5> Od kdy </h5>
                     <div className='col-sm-12 col-md-6 col-lg-6'>
                         <TextField
                             id="date"
-                            label="Od kdy"
+                            label="Datum"
                             type="date"
                             defaultValue={data.start}
                             onChange={(e) => { setStart(e.target.value); setDateChanged(true); }}
@@ -242,10 +375,40 @@ const Filter = ({ show, data, handleClose, change }) => {
                     <div className='col-sm-12 col-md-6 col-lg-6'>
                         <TextField
                             id="date"
-                            label="Do kdy"
+                            label="Čas"
+                            type="time"
+                            defaultValue={data.startTime}
+                            onChange={(e) => { setStartTime(e.target.value); setDateChanged(true); }}
+                            sx={{ width: 220 }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </div>
+                </div>
+                <div className='new-line'></div>
+                <div className='row'>
+                    <h5> Do kdy </h5>
+                    <div className='col-sm-12 col-md-6 col-lg-6'>
+                        <TextField
+                            id="date"
+                            label="Datum"
                             type="date"
                             defaultValue={data.end}
                             onChange={(e) => { setEnd(e.target.value); setDateChanged(true); }}
+                            sx={{ width: 220 }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </div>
+                    <div className='col-sm-12 col-md-6 col-lg-6'>
+                        <TextField
+                            id="date"
+                            label="Čas"
+                            type="time"
+                            defaultValue={data.endTime}
+                            onChange={(e) => { setEndTime(e.target.value); setDateChanged(true); }}
                             sx={{ width: 220 }}
                             InputLabelProps={{
                                 shrink: true,
@@ -274,7 +437,7 @@ const Filter = ({ show, data, handleClose, change }) => {
             <Modal.Footer>
                 <Button
                     variant="contained"
-                    onClick={() => { change({ start: start, end: end, granularity: granularity }, dateChanged); handleClose(); }}
+                    onClick={() => { change({ start: start, startTime: startTime, end: end, endTime: endTime, granularity: granularity }, dateChanged); handleClose(); }}
                 >
                     Nastavit filtry
                 </Button>
