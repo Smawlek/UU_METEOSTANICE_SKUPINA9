@@ -5,7 +5,7 @@ import Footer from '../helpers/footer';
 // Komponenty
 import Dashboard from '../components/dashboard';
 // Konstanty
-const stations = ['8e22134e5fa571f536412ed5647e63e1'];
+const stations = ['8e22134e5fa571f536412ed5647e63e1', '8e22134e5fa571f536412ed5647e63e1'];
 
 const Home = () => {
 

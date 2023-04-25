@@ -20,10 +20,10 @@ import Axios from 'axios';
 const source = Axios.CancelToken.source();
 const config = { cancelToken: source.token };
 // Konstanty
-const SERVER_BASE_URL = /*"http://localhost:4000" */"https://testing-heroku-dobest.herokuapp.com";
+const SERVER_BASE_URL = "http://localhost:4000" //"https://testing-heroku-dobest.herokuapp.com";
 // Ostatní proměnné
 let setFilters = {
-    start: moment(Date.now()).subtract(30, 'days').format('YYYY-MM-DD'),
+    start: moment(Date.now()).subtract(2, 'days').format('YYYY-MM-DD'),
     startTime: '00:00',
     end: moment(Date.now()).format('YYYY-MM-DD'),
     endTime: '23:59',
@@ -37,6 +37,7 @@ let called = false;
 const Dashboard = ({ public_tokens, units }) => {
     // Stanice
     const [shownStation, setShownStation] = useState();
+    const [shownStationName, setShownStationName] = useState();
     const [data, setData] = useState([]);
     const [shownData, setShownData] = useState("");
     const [temp, setTemp] = useState(0);
@@ -45,7 +46,6 @@ const Dashboard = ({ public_tokens, units }) => {
     const [showFilterModal, setShowFilterModal] = useState(false);
     // UseEffecty
     useEffect(() => {
-        
         called = true;
         // Nastavení jednotek
         setUnitsVariables(units);
@@ -117,7 +117,10 @@ const Dashboard = ({ public_tokens, units }) => {
             if (temp != undefined) {
                 arr.push({ label: temp.location_name, value: temp.token });
 
-                if (i === 0) setShownStation(temp.token);
+                if (i === 0) {
+                    setShownStation(temp.token);
+                    setShownStationName(temp.location_name);
+                }
             }
         }
 
@@ -260,7 +263,7 @@ const Dashboard = ({ public_tokens, units }) => {
                 {/* Horní bar */}
                 <div className='row dashboard-header mx-auto'>
                     <div className='col-sm-12 col-md-12 col-lg-7'>
-                        <h3> <b> Měření teploty </b> </h3>
+                        <h3> <b> Měření teploty - {shownStationName} </b> </h3>
                     </div>
                     <div className='col-sm-12 col-md-12 col-lg-3'>
                         {stations.length <= 1 ? '' :
@@ -269,7 +272,7 @@ const Dashboard = ({ public_tokens, units }) => {
                                 inputId="aria-example-input"
                                 name="aria-live-color"
                                 placeholder="Vyberte stanici"
-                                onChange={(selected) => { setShownStation(selected.value); }}
+                                onChange={(selected) => { setShownStation(selected.value); setShownStationName(selected.label) }}
                                 options={stations}
                             />
                         }
