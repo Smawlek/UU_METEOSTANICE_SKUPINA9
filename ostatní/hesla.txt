@@ -1,13 +1,9 @@
 Jméno: f78e7c39e4719069e14afbec0ebdcd97
 Heslo: 6yeQ9pKAgFuqd
 Hash: ed24b0795c5c96d219eb6c31f8c03f2e
-Přístupový token: cbKwZmB1Ez1RA
-Hash přístupového tokenu: 768eabc58b9b038882e2a87df3dca05b
 --------------------------------------------------------------------------------------
 Jméno: 712470efe32bb006c3d7e4384db56b6f
 Heslo: BGQBzbjNMq1OE
 Hash: 6590ed93c6f40ec58688bb2884d40fca
-Přístupový token: O89EvmAHWs7wC
-Hash přístupového tokenu: 700ad80abeec4696701c4b4eead50d90
 --------------------------------------------------------------------------------------
 32
