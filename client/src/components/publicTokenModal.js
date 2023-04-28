@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 // Axios Calls
 import { _changeLocationsPublicToken } from '../axiosCalls/locations';
 
-const PublicTokenModal = ({ public_token, location_id, show, handleClose }) => {
+const PublicTokenModal = ({ location_id, public_token, show, handleClose }) => {
     const [token, setToken] = useState(public_token);
 
     async function changeToken() {
@@ -27,7 +27,7 @@ const PublicTokenModal = ({ public_token, location_id, show, handleClose }) => {
                     <Modal.Title> Zobrazení veřejného klíče  </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p> <b> Aktuální veřejný klíč: </b> {token} </p>
+                    <p> <b> Aktuální veřejný klíč: </b> {token === undefined ? public_token : token} </p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

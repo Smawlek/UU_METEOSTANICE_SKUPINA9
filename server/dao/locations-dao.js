@@ -72,6 +72,24 @@ class LocationsDao {
         }
     }
 
+    async ListUserPublickTokens(id) {
+        try {
+            const connection = await this._connectDBSync();
+
+            let sql = `SELECT l.publicToken
+            FROM locations l
+            JOIN devices d ON d.id_de = l.device_id
+            WHERE d.owner = ${id}`;
+            let [res] = await connection.query(sql);
+
+            connection.end();
+
+            return res;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async _connectDBSync() {
         let connectionSync = mysql.createPool(
             {

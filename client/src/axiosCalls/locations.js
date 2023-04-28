@@ -34,7 +34,6 @@ export const _listUsersLocations = async () => {
 
 export const _changeLocationsPublicToken = async (data) => {
     try {
-        console.log(data.location)
         return await Axios.get(SERVER_BASE_URL + "/locations/change-public-token", {
             headers: {
                 token: token

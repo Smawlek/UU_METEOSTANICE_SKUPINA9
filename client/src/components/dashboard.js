@@ -58,7 +58,10 @@ const Dashboard = ({ public_tokens, units }) => {
     }, [shownStation])
 
     useEffect(() => {
-        if (data.length <= 0) return;
+        if (data.length <= 0) {
+            setShownData(data);
+            return;
+        }
         // Vyfiltrování
         filterData(data);
     }, [data])

@@ -1,13 +1,40 @@
 import '../App.css';
+// React
+import { useEffect, useState } from 'react';
+import { ReactSession } from 'react-client-session';
 // Helpery
 import Title from '../helpers/title';
 import Footer from '../helpers/footer';
 // Komponenty
 import Dashboard from '../components/dashboard';
+// Axios Calls
+import { _listUsersLocations } from '../axiosCalls/locations';
 // Konstanty
-const stations = ['8e22134e5fa571f536412ed5647e63e1', '8e22134e5fa571f536412ed5647e63e1'];
+ReactSession.setStoreType("localStorage");
+
+const user = ReactSession.get("meteostanice-user");
+let callOnce = false;
 
 const Home = () => {
+    const [stations, setStations] = useState([]);
+
+    useEffect(() => {
+        if (callOnce) return;
+
+        getPublicTokens();
+    }, []);
+
+    async function getPublicTokens() {
+        callOnce = true;
+        let arr = [];
+        const temp = (await _listUsersLocations()).data;
+
+        for (let i = 0; i < temp.length; i++) {
+            arr.push(temp[i].publicToken);
+        }
+
+        setStations(arr);
+    }
 
     return (
         <>
@@ -15,9 +42,14 @@ const Home = () => {
             <div className='container'>
                 <div className='card border-0 shadow my-5'>
                     <div className='card-body p-5'>
-                        <h1> <u> Dashboard </u> </h1>
+                        <h1> <u> <b> Vítejte na stránce Meteostanice </b> </u> </h1>
                         <div className='new-line'></div>
-                        <Dashboard public_tokens={stations} />
+                        {user != undefined ? stations.length <= 0 ?
+                            <div className="col-sm-12 col-md-12 col-lg-12 mx-auto search-result"> <p> <b> DATA SE NAČÍTAJÍ </b> </p> </div> :
+                            <Dashboard public_tokens={stations} /> :
+                            <>
+                                <h3> Pokud chcete zobrazit teploty pro vaše lokace, musíte se přihlásit </h3>
+                            </>}
                     </div>
                 </div>
             </div>
