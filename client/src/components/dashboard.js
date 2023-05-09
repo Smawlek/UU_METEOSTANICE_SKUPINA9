@@ -20,7 +20,7 @@ import Axios from 'axios';
 const source = Axios.CancelToken.source();
 const config = { cancelToken: source.token };
 // Konstanty
-const SERVER_BASE_URL = "http://localhost:4000" //"https://testing-heroku-dobest.herokuapp.com";
+const SERVER_BASE_URL = /*"http://localhost:4000" */"https://testing-heroku-dobest.herokuapp.com";
 // Ostatní proměnné
 let setFilters = {
     start: moment(Date.now()).subtract(2, 'days').format('YYYY-MM-DD'),
@@ -146,7 +146,7 @@ const Dashboard = ({ public_tokens, units }) => {
         // Ověření
         chechGranularity();
         // Získání dat
-        if(shownStation === undefined) return;
+        if (shownStation === undefined) return;
         const temp = (await _getReportsByDates(setFilters));
         setData(temp.data);
     }
@@ -154,27 +154,27 @@ const Dashboard = ({ public_tokens, units }) => {
     function chechGranularity() {
         const timeDiff = moment.duration(moment(setFilters.end).diff(setFilters.start)).asDays();
 
-        if (timeDiff <= 1 && setFilters.granularity != 0) {
+        if (timeDiff <= 1 && setFilters.granularity < 0) {
             setFilters.granularity = 0;
         }
 
-        if (timeDiff > 1 && timeDiff <= 3 && setFilters.granularity != 1) {
+        if (timeDiff > 1 && timeDiff <= 3 && setFilters.granularity < 1) {
             setFilters.granularity = 1;
         }
 
-        if (timeDiff > 3 && timeDiff <= 7 && setFilters.granularity != 2) {
+        if (timeDiff > 3 && timeDiff <= 7 && setFilters.granularity < 2) {
             setFilters.granularity = 2;
         }
 
-        if (timeDiff > 7 && timeDiff <= 14 && setFilters.granularity != 3) {
+        if (timeDiff > 7 && timeDiff <= 14 && setFilters.granularity < 3) {
             setFilters.granularity = 3;
         }
 
-        if (timeDiff > 14 && timeDiff <= 30 && setFilters.granularity != 4) {
+        if (timeDiff > 14 && timeDiff <= 30 && setFilters.granularity < 4) {
             setFilters.granularity = 4;
         }
 
-        if (timeDiff > 30 && timeDiff <= 90 && setFilters.granularity != 5) {
+        if (timeDiff > 30 && timeDiff <= 90 && setFilters.granularity < 5) {
             setFilters.granularity = 5;
         }
 
@@ -210,9 +210,7 @@ const Dashboard = ({ public_tokens, units }) => {
                 break;
         }
 
-        setShownData(finalData);
-        setTemp(finalData[finalData.length - 1].temperature);
-        setHumid(finalData[finalData.length - 1].humidity)
+        completeMissing(finalData);
     }
 
     function upsample(arr) {
@@ -225,7 +223,7 @@ const Dashboard = ({ public_tokens, units }) => {
             finalArr.push({
                 temperature: arr[i].temperature * unitsTransfer,
                 humidity: arr[i].humidity,
-                date: moment(arr[i].date).format('DD.MM.YY HH:mm:ss')
+                date: moment().format('YYYY-MM-DD HH:mm:SS')
             });
             // Kontrola zda není poslední
             if (i < arr.length - 1) {
@@ -237,7 +235,7 @@ const Dashboard = ({ public_tokens, units }) => {
                     finalArr.push({
                         temperature: (arr[i].temperature - j * (divT / 5)) * unitsTransfer,
                         humidity: arr[i].humidity - j * (divH / 5),
-                        date: moment(arr[i].date).add(j, 'minutes').format('DD.MM.YY HH:mm:ss')
+                        date: moment(arr[i].date).add(j, 'minutes').format('YYYY-MM-DD HH:mm:SS')
                     });
                 }
             }
@@ -253,11 +251,66 @@ const Dashboard = ({ public_tokens, units }) => {
             fin.push({
                 temperature: arr[i].temperature * unitsTransfer,
                 humidity: arr[i].humidity,
-                date: moment(arr[i].date).format('DD.MM.YY HH:mm:ss')
+                date: moment(arr[i].date).format('YYYY-MM-DD HH:mm:SS')
             });
         }
 
         return fin;
+    }
+
+    function completeMissing(data) {
+        let finalData = [];
+        let i = 0;
+        let actualDate = setFilters.start + " " + setFilters.startTime + ":00";
+        let endDate = setFilters.end + " " + setFilters.endTime + ":00";
+        let granPlus = setFilters.granularity === 0 ? 1 : setFilters.granularity === 1 ? 5 : setFilters.granularity === 2 ? 10 : setFilters.granularity === 3 ? 30 : setFilters.granularity === 4 ? 60 : 1440;
+        endDate = moment(endDate).add(granPlus, 'minutes').format('YYYY-MM-DD HH:mm:SS');
+
+        if (i < data.length && data[i].date == actualDate) {
+            finalData.push({
+                id_re: data[i].id_re,
+                location_id: data[i].location_id,
+                temperature: data[i].temperature,
+                humidity: data[i].humidity,
+                date: moment(data[i].date).format('HH:mm:SS DD.MM.YY')
+            });
+            i++;
+        } else {
+            finalData.push({
+                id_re: 0,
+                location_id: data[0].location_id,
+                temperature: 0,
+                humidity: 0,
+                date: moment(actualDate).format('HH:mm:SS DD.MM.YY')
+            });
+        }
+        
+        while (actualDate <= endDate) {
+            if (i < data.length && data[i].date == actualDate) {
+                finalData.push({
+                    id_re: data[i].id_re,
+                    location_id: data[i].location_id,
+                    temperature: data[i].temperature,
+                    humidity: data[i].humidity,
+                    date: moment(data[i].date).format('HH:mm:SS DD.MM.YY')
+                });
+                i++;
+            } else {
+                finalData.push({
+                    id_re: 0,
+                    location_id: data[0].location_id,
+                    temperature: 0,
+                    humidity: 0,
+                    date: moment(actualDate).format('HH:mm:SS DD.MM.YY')
+                });
+            }
+
+            actualDate = moment(actualDate).add(granPlus, 'minutes').format('YYYY-MM-DD HH:mm:SS');
+        }
+
+        setShownData(finalData);
+        setTemp(finalData[finalData.length - 1].temperature);
+        setHumid(finalData[finalData.length - 1].humidity);
     }
 
     return (
@@ -298,8 +351,6 @@ const Dashboard = ({ public_tokens, units }) => {
                 {/* Tělo */}
                 {shownData === "" ?
                     <div className="col-sm-12 col-md-12 col-lg-12 mx-auto search-result"> <p> <b> DATA SE NAČÍTAJÍ </b> </p> </div> :
-                    shownData <= 0 ?
-                        <div className="col-sm-12 col-md-12 col-lg-12 mx-auto search-result"> <p> <b> ŽÁDNÉ VÝSLEDKY </b> </p> </div> :
                         <div className='row dashboard-body'>
                             <div className='col-sm-12 col-md-12 col-lg-5 mx-auto'>
                                 <span> Aktuální teplota: {temp} {unitsSign}  |  Aktuální vlhkost: {humid} % </span>

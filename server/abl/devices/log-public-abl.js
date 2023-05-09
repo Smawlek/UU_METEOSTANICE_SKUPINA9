@@ -26,7 +26,7 @@ async function LogPublicAbl(req, res) {
             let resp = await dao.LogPublic(body);
 
             if (resp[0].device_id > 0) {
-                let temp = {device_id: resp[0].device_id, role: 0, isPublicToken: true};
+                let temp = {device_id: resp[0].device_id, role: 'READ-ONLY', isPublicToken: true};
                 resp[0].token = jwt.sign(temp, process.env.ACCESS_TOKEN_SECRET);
                 resp = JSON.stringify(resp);
                 res.status(200).send(resp);

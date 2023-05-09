@@ -7,11 +7,13 @@ import Button from '@mui/material/Button';
 // Axios Calls
 import { _changeLocationsPublicToken } from '../axiosCalls/locations';
 
-const PublicTokenModal = ({ location_id, public_token, show, handleClose }) => {
+const PublicTokenModal = ({ location_id, public_token, show, handleClose, updateTokenToParent }) => {
     const [token, setToken] = useState(public_token);
 
     async function changeToken() {
-        setToken((await _changeLocationsPublicToken({location: location_id})).data.publicToken);
+        const tok = (await _changeLocationsPublicToken({location: location_id})).data.publicToken;
+        setToken(tok);
+        updateTokenToParent((await _changeLocationsPublicToken({location: location_id})).data.publicToken)
     }
 
     return (

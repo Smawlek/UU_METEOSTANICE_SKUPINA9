@@ -29,7 +29,7 @@ async function ChangeLocationsPublicTokenAbl(req, res) {
         body.location = Number(body.location);
 
         const valid = ajv.validate(schema, body);
-console.log(body)
+
         if (valid) {
             let resp = await dao.ChangePublicToken(body.location);
 

@@ -14,7 +14,7 @@ let schema = {
     "required": ["start", "end"]
 };
 
-const allowedRoles = [0];
+const allowedRoles = ['READ-ONLY', 0, 1, 11];
 
 async function GetReportsByDatesAbl(req, res) {
     try {

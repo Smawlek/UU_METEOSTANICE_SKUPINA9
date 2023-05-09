@@ -179,6 +179,11 @@ const AddDevice = ({ show, data, handleClose }) => {
 
 const LocationsCard = ({ data }) => {
     const [show, setShow] = useState(0);
+
+    function updateToken(token) {
+        data.publicToken = token;
+    }
+
     return (
         <>
             <div className='linecard-div'>
@@ -195,7 +200,7 @@ const LocationsCard = ({ data }) => {
                                 <BsGraphUp />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip placement='top' className='lesson_timetable_tooltip' title={'Zobrazit veřejný token'}>
+                        <Tooltip placement='top' className='lesson_timetable_tooltip' title={'Zobrazit veřejný klíč'}>
                             <IconButton onClick={() => { show === 2 ? setShow(0) : setShow(2) }}>
                                 <BiHash />
                             </IconButton>
@@ -209,7 +214,7 @@ const LocationsCard = ({ data }) => {
                         <div className='new-line' />
                     </> : ''
                 }
-                <PublicTokenModal location_id={data.location_id} public_token={data.publicToken} show={show === 2} handleClose={() => {setShow(0)}} />
+                <PublicTokenModal location_id={data.location_id} public_token={data.publicToken} show={show === 2} handleClose={() => {setShow(0)}} updateTokenToParent={updateToken} />
             </div>
 
             <div className='new-line' />
