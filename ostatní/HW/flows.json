@@ -1,5 +1,946 @@
 [
     {
+        "id": "4ef45ef7557a9890",
+        "type": "tab",
+        "label": "Flow 1 - Načtení dat",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4bbf239f73aa47f3",
+        "type": "tab",
+        "label": "Flow 2 - Poslání dat",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c3b2cdf3e84ed33a",
+        "type": "tab",
+        "label": "Flow 3 - Čistič",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7b1da81a98b3f164",
+        "type": "tab",
+        "label": "Flow 4 - Dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7a038537d031b8fe",
+        "type": "tab",
+        "label": "Flow 5 - Ostatní",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b1faee37ee670a28",
+        "type": "serial-port",
+        "serialport": "COM3",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "eba1ec023a036854",
+        "type": "ui_tab",
+        "name": "Gauges",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "e34c305472ef0a9f",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "6c84a2e183120183",
+        "type": "ui_group",
+        "name": "Teplota",
+        "tab": "eba1ec023a036854",
+        "order": 2,
+        "disp": true,
+        "width": "13",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "169b72ad6166ef12",
+        "type": "ui_group",
+        "name": "Vlhkost vzduchu",
+        "tab": "eba1ec023a036854",
+        "order": 3,
+        "disp": true,
+        "width": "13",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "faabbd43a4fc0896",
+        "type": "sqlitedb",
+        "db": "C:\\Users\\ondra\\Desktop\\UU_METEOSTANICE_SKUPINA9\\ostatní\\db",
+        "mode": "RWC"
+    },
+    {
+        "id": "16a6f0e47680b486",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "",
+        "order": 1,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "0804815a2fcc1676",
+        "type": "ui_group",
+        "name": "Neodeslaná data",
+        "tab": "eba1ec023a036854",
+        "order": 1,
+        "disp": true,
+        "width": "26",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3cc225bfc6075bf1",
+        "type": "function",
+        "z": "4ef45ef7557a9890",
+        "name": "Prepare data",
+        "func": "let temp = (msg.payload.split(\",\"));\nlet temperature = (temp[0]).toString();\nlet humid = (temp[1]).toString();\nlet d = msg.date\n\nreturn {\n    topic: `INSERT INTO data VALUES(NULL, $temperature, $humidity, $date)`,\n    payload: [\n        temperature,\n        humid,\n        d\n    ]\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 140,
+        "wires": [
+            [
+                "76eb967c4e20b0d8",
+                "6edcc17a1283c5ae"
+            ]
+        ]
+    },
+    {
+        "id": "76eb967c4e20b0d8",
+        "type": "debug",
+        "z": "4ef45ef7557a9890",
+        "name": "check formatted data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ceea3b1efa7841aa",
+        "type": "inject",
+        "z": "4ef45ef7557a9890",
+        "name": "5 min",
+        "props": [
+            {
+                "p": "date",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "payload.time",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 140,
+        "wires": [
+            [
+                "7a81cb39c8b809ed"
+            ]
+        ]
+    },
+    {
+        "id": "7a81cb39c8b809ed",
+        "type": "serial request",
+        "z": "4ef45ef7557a9890",
+        "name": "",
+        "serial": "b1faee37ee670a28",
+        "x": 210,
+        "y": 140,
+        "wires": [
+            [
+                "cc86feefdcf37658"
+            ]
+        ]
+    },
+    {
+        "id": "6edcc17a1283c5ae",
+        "type": "sqlite",
+        "z": "4ef45ef7557a9890",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "INSERT INTO db",
+        "x": 710,
+        "y": 140,
+        "wires": [
+            [
+                "fbcefaef4d3dff27"
+            ]
+        ]
+    },
+    {
+        "id": "fbcefaef4d3dff27",
+        "type": "debug",
+        "z": "4ef45ef7557a9890",
+        "name": "sql check",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "cc86feefdcf37658",
+        "type": "moment",
+        "z": "4ef45ef7557a9890",
+        "name": "format date",
+        "topic": "",
+        "input": "date",
+        "inputType": "msg",
+        "inTz": "Europe/Prague",
+        "adjAmount": 0,
+        "adjType": "days",
+        "adjDir": "add",
+        "format": "YYYY-MM-DD HH:mm:SS",
+        "locale": "cs-CZ",
+        "output": "date",
+        "outputType": "msg",
+        "outTz": "Europe/Prague",
+        "x": 350,
+        "y": 140,
+        "wires": [
+            [
+                "3cc225bfc6075bf1"
+            ]
+        ]
+    },
+    {
+        "id": "de955eb102bbd776",
+        "type": "debug",
+        "z": "4bbf239f73aa47f3",
+        "name": "check acquired data",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "0534254995c64efb",
+        "type": "http request",
+        "z": "4bbf239f73aa47f3",
+        "name": "send data",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "localhost:4000/reports/add",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "token",
+                "valueType": "msg",
+                "valueValue": "cookies"
+            }
+        ],
+        "x": 540,
+        "y": 100,
+        "wires": [
+            [
+                "3258c408f5625e81",
+                "3a28e5db2f6d8a4b"
+            ]
+        ]
+    },
+    {
+        "id": "c79ed6fbd352bede",
+        "type": "function",
+        "z": "4bbf239f73aa47f3",
+        "name": "info for token",
+        "func": "\nreturn {\n    device: \"f78e7c39e4719069e14afbec0ebdcd97\",\n    password: \"6yeQ9pKAgFuqd\"\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 160,
+        "wires": [
+            [
+                "09a6e141c1a8cbc1"
+            ]
+        ]
+    },
+    {
+        "id": "3258c408f5625e81",
+        "type": "debug",
+        "z": "4bbf239f73aa47f3",
+        "name": "check response",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "3a28e5db2f6d8a4b",
+        "type": "switch",
+        "z": "4bbf239f73aa47f3",
+        "name": "",
+        "property": "payload.affectedRows",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 690,
+        "y": 100,
+        "wires": [
+            [
+                "a3f198d9c970088e"
+            ],
+            [
+                "c79ed6fbd352bede"
+            ]
+        ]
+    },
+    {
+        "id": "09a6e141c1a8cbc1",
+        "type": "http request",
+        "z": "4bbf239f73aa47f3",
+        "name": "get token",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "localhost:4000/devices/log",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1000,
+        "y": 160,
+        "wires": [
+            [
+                "faed060f65938fb3"
+            ]
+        ]
+    },
+    {
+        "id": "faed060f65938fb3",
+        "type": "switch",
+        "z": "4bbf239f73aa47f3",
+        "name": "",
+        "property": "payload.token",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1130,
+        "y": 160,
+        "wires": [
+            [
+                "97b2d3c9de4dc277"
+            ]
+        ]
+    },
+    {
+        "id": "886c4bbdd9c3ecb5",
+        "type": "inject",
+        "z": "4bbf239f73aa47f3",
+        "name": "310s",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "310",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 70,
+        "y": 100,
+        "wires": [
+            [
+                "f34c9b3a56defcaf"
+            ]
+        ]
+    },
+    {
+        "id": "f34c9b3a56defcaf",
+        "type": "sqlite",
+        "z": "4bbf239f73aa47f3",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "fixed",
+        "sql": "SELECT * \nFROM data \nORDER BY id DESC LIMIT 1",
+        "name": "get data",
+        "x": 220,
+        "y": 100,
+        "wires": [
+            [
+                "1842ca9ff5839f53"
+            ]
+        ]
+    },
+    {
+        "id": "1842ca9ff5839f53",
+        "type": "function",
+        "z": "4bbf239f73aa47f3",
+        "name": "prepare data",
+        "func": "let cook = context.get(\"token\")\nreturn {\n    cookies: cook,\n    id: msg.payload[0].id,\n    payload: {\n        temperature: parseFloat(msg.payload[0].temp),\n        humidity: parseFloat(msg.payload[0].humid),\n        date: msg.payload[0].date\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.set(\"token\", \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VfaWQiOjEsInJvbGUiOjAsImlhdCI6MTY4MDI4NTI0NH0.4f_yFBY1zq3wlPkQ3IudJHdGQXWj5XqpwMjZZ1GCvYs\");\n",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 100,
+        "wires": [
+            [
+                "de955eb102bbd776",
+                "0534254995c64efb"
+            ]
+        ]
+    },
+    {
+        "id": "a3f198d9c970088e",
+        "type": "function",
+        "z": "4bbf239f73aa47f3",
+        "name": "prepare for delete",
+        "func": "\nreturn {\n    topic: `DELETE FROM data WHERE $id`,\n    payload: [\n        msg.id\n    ]\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 100,
+        "wires": [
+            [
+                "68edd378db69ed11"
+            ]
+        ]
+    },
+    {
+        "id": "68edd378db69ed11",
+        "type": "sqlite",
+        "z": "4bbf239f73aa47f3",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "delete",
+        "x": 1030,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "97b2d3c9de4dc277",
+        "type": "function",
+        "z": "4bbf239f73aa47f3",
+        "name": "set token",
+        "func": "context.set(\"token\", msg.payload.token);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7b42d2717117328f",
+        "type": "inject",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "1 min",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "b03959e04fda90de"
+            ]
+        ]
+    },
+    {
+        "id": "717653627544a29e",
+        "type": "sqlite",
+        "z": "c3b2cdf3e84ed33a",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "fixed",
+        "sql": "SELECT * \nFROM data  \nDESC LIMIT 1",
+        "name": "get data",
+        "x": 660,
+        "y": 120,
+        "wires": [
+            [
+                "2a202d13b3ebdb2b"
+            ]
+        ]
+    },
+    {
+        "id": "b03959e04fda90de",
+        "type": "function",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "info for token",
+        "func": "\nreturn {\n    device: \"f78e7c39e4719069e14afbec0ebdcd97\",\n    password: \"6yeQ9pKAgFuqd\"\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 120,
+        "wires": [
+            [
+                "74358534402e818a"
+            ]
+        ]
+    },
+    {
+        "id": "74358534402e818a",
+        "type": "http request",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "get token",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "localhost:4000/devices/log",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 400,
+        "y": 120,
+        "wires": [
+            [
+                "2732b0b7fa26e93f"
+            ]
+        ]
+    },
+    {
+        "id": "2732b0b7fa26e93f",
+        "type": "switch",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "",
+        "property": "payload.token",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 530,
+        "y": 120,
+        "wires": [
+            [
+                "717653627544a29e"
+            ]
+        ]
+    },
+    {
+        "id": "9cca399ee249f76f",
+        "type": "function",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "prepare data",
+        "func": "let cook = msg.payload.cookies;\nreturn {\n    cookies: cook,\n    id: msg.payload[0].id,\n    payload: {\n        temperature: parseFloat(msg.payload[0].temp),\n        humidity: parseFloat(msg.payload[0].humid),\n        date: msg.payload[0].date\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.set(\"token\", \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VfaWQiOjEsInJvbGUiOjAsImlhdCI6MTY4MDI4NTI0NH0.4f_yFBY1zq3wlPkQ3IudJHdGQXWj5XqpwMjZZ1GCvYs\");\n",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 120,
+        "wires": [
+            [
+                "cc1e1f2546090064"
+            ]
+        ]
+    },
+    {
+        "id": "cc1e1f2546090064",
+        "type": "http request",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "send data",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "localhost:4000/reports/add",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "token",
+                "valueType": "msg",
+                "valueValue": "cookies"
+            }
+        ],
+        "x": 1080,
+        "y": 120,
+        "wires": [
+            [
+                "c7ae29eca0a68f5d"
+            ]
+        ]
+    },
+    {
+        "id": "3d05002ad0219da1",
+        "type": "function",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "prepare for delete",
+        "func": "\nreturn {\n    topic: `DELETE FROM data WHERE $id`,\n    payload: [\n        msg.id\n    ]\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1390,
+        "y": 120,
+        "wires": [
+            [
+                "73497ecc599eb3b9"
+            ]
+        ]
+    },
+    {
+        "id": "c7ae29eca0a68f5d",
+        "type": "switch",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "",
+        "property": "payload.affectedRows",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1210,
+        "y": 120,
+        "wires": [
+            [
+                "3d05002ad0219da1"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "73497ecc599eb3b9",
+        "type": "sqlite",
+        "z": "c3b2cdf3e84ed33a",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "delete",
+        "x": 1550,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2a202d13b3ebdb2b",
+        "type": "switch",
+        "z": "c3b2cdf3e84ed33a",
+        "name": "",
+        "property": "payload.length",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 790,
+        "y": 120,
+        "wires": [
+            [
+                "9cca399ee249f76f"
+            ]
+        ]
+    },
+    {
+        "id": "e586d7185de068df",
+        "type": "function",
+        "z": "7b1da81a98b3f164",
+        "name": "prepare",
+        "func": "\nreturn { value: parseFloat(msg.payload.temperature)};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 40,
+        "wires": [
+            [
+                "9e58126234eed125"
+            ]
+        ]
+    },
+    {
+        "id": "a4ac6a1428936e23",
+        "type": "function",
+        "z": "7b1da81a98b3f164",
+        "name": "prepare",
+        "func": "\nreturn { value: parseFloat(msg.payload.humidity)};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 80,
+        "wires": [
+            [
+                "e482a91b32840dbb"
+            ]
+        ]
+    },
+    {
+        "id": "e482a91b32840dbb",
+        "type": "ui_gauge",
+        "z": "7b1da81a98b3f164",
+        "name": "Humidity",
+        "group": "169b72ad6166ef12",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Vlhkost vzduchu v místnosti",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 900,
+        "y": 80,
+        "wires": []
+    },
+    {
         "id": "f42b3eda6a7a3066",
         "type": "inject",
         "z": "7b1da81a98b3f164",
@@ -23,5 +964,300 @@
                 "7ee20ebd1f5be662"
             ]
         ]
+    },
+    {
+        "id": "7ee20ebd1f5be662",
+        "type": "sqlite",
+        "z": "7b1da81a98b3f164",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "fixed",
+        "sql": "SELECT *, COUNT(temp) AS 'count'\nFROM data \nORDER BY id DESC LIMIT 1",
+        "name": "get data",
+        "x": 300,
+        "y": 120,
+        "wires": [
+            [
+                "e137f625a302b3c7"
+            ]
+        ]
+    },
+    {
+        "id": "e137f625a302b3c7",
+        "type": "switch",
+        "z": "7b1da81a98b3f164",
+        "name": "",
+        "property": "payload.length",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 430,
+        "y": 120,
+        "wires": [
+            [
+                "9739965fce67d968"
+            ]
+        ]
+    },
+    {
+        "id": "9739965fce67d968",
+        "type": "function",
+        "z": "7b1da81a98b3f164",
+        "name": "prepare data",
+        "func": "\nreturn {\n    payload: {\n        temperature: parseFloat(msg.payload[0].temp),\n        humidity: parseFloat(msg.payload[0].humid),\n        count: msg.payload[0].count,\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 120,
+        "wires": [
+            [
+                "e586d7185de068df",
+                "a4ac6a1428936e23",
+                "4d8122bb88dbdfb3"
+            ]
+        ]
+    },
+    {
+        "id": "9e58126234eed125",
+        "type": "ui_gauge",
+        "z": "7b1da81a98b3f164",
+        "name": "Tepmerature",
+        "group": "6c84a2e183120183",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Teplota v místnosti",
+        "label": "Celsius",
+        "format": "{{value}}",
+        "min": "-35",
+        "max": "35",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 910,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "4d8122bb88dbdfb3",
+        "type": "function",
+        "z": "7b1da81a98b3f164",
+        "name": "prepare",
+        "func": "\nreturn {\n    label: \"Počet neodeslaných záznamů: \" + msg.payload.count,\n    value: msg.payload.count\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.set(\"data\", []);\ncontext.set(\"dates\", []);",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 120,
+        "wires": [
+            [
+                "279e651bf6de8c4c",
+                "96bfb8d54fdcd4de"
+            ]
+        ]
+    },
+    {
+        "id": "279e651bf6de8c4c",
+        "type": "ui_text",
+        "z": "7b1da81a98b3f164",
+        "group": "0804815a2fcc1676",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Count",
+        "label": "",
+        "format": "{{label}}",
+        "layout": "row-center",
+        "className": "",
+        "x": 890,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "96bfb8d54fdcd4de",
+        "type": "debug",
+        "z": "7b1da81a98b3f164",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "faf05abd2a93f5f4",
+        "type": "inject",
+        "z": "7a038537d031b8fe",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 100,
+        "wires": [
+            [
+                "6ecfa366baf3905c"
+            ]
+        ]
+    },
+    {
+        "id": "6ecfa366baf3905c",
+        "type": "sqlite",
+        "z": "7a038537d031b8fe",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "fixed",
+        "sql": "SELECT * FROM data",
+        "name": "SELECT *",
+        "x": 290,
+        "y": 100,
+        "wires": [
+            [
+                "d953446f53e6a528"
+            ]
+        ]
+    },
+    {
+        "id": "d953446f53e6a528",
+        "type": "debug",
+        "z": "7a038537d031b8fe",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "6e46f8804d02ccab",
+        "type": "inject",
+        "z": "7a038537d031b8fe",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 180,
+        "wires": [
+            [
+                "42f230f0137805e0"
+            ]
+        ]
+    },
+    {
+        "id": "42f230f0137805e0",
+        "type": "sqlite",
+        "z": "7a038537d031b8fe",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "fixed",
+        "sql": "DELETE FROM data",
+        "name": "DELETE all",
+        "x": 290,
+        "y": 180,
+        "wires": [
+            [
+                "88aa4bf253ad035a"
+            ]
+        ]
+    },
+    {
+        "id": "88aa4bf253ad035a",
+        "type": "debug",
+        "z": "7a038537d031b8fe",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "25aa60d02e368ef2",
+        "type": "inject",
+        "z": "7a038537d031b8fe",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 280,
+        "wires": [
+            [
+                "968597a33cb521b4"
+            ]
+        ]
+    },
+    {
+        "id": "968597a33cb521b4",
+        "type": "sqlite",
+        "z": "7a038537d031b8fe",
+        "mydb": "faabbd43a4fc0896",
+        "sqlquery": "fixed",
+        "sql": "SELECT *, COUNT(temp) AS 'count'\nFROM data \nORDER BY id DESC LIMIT 1",
+        "name": "Test",
+        "x": 270,
+        "y": 280,
+        "wires": [
+            [
+                "c1ae93c31f10c108"
+            ]
+        ]
+    },
+    {
+        "id": "c1ae93c31f10c108",
+        "type": "debug",
+        "z": "7a038537d031b8fe",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 280,
+        "wires": []
     }
 ]

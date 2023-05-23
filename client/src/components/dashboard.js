@@ -22,7 +22,7 @@ import Axios from 'axios';
 const source = Axios.CancelToken.source();
 const config = { cancelToken: source.token };
 // Konstanty
-let SERVER_BASE_URL = "http://localhost:4000" //"https://testing-heroku-dobest.herokuapp.com";
+let SERVER_BASE_URL = /*"http://localhost:4000"*/ "https://testing-heroku-dobest.herokuapp.com";
 // Ostatní proměnné
 let setFilters = {
     start: moment(Date.now()).subtract(1, 'days').format('YYYY-MM-DD'),
@@ -192,7 +192,7 @@ const Dashboard = ({ public_keys, units, uri }) => {
 
     async function filterData(arr) {
         
-        setLastUpdate(moment(arr[arr.length - 1].date).format('hh:mm DD.MM.YYYY'))
+        setLastUpdate(moment(arr[arr.length - 1].date).format('HH:mm DD.MM.YYYY'))
         let finalData = completeMissing(arr);;
         // granularita | 0 - 1 min, 1 - 5 min, 2 - 10 min, 3 - 30 min, 4 - 1 h, 5 - 1 den
         switch (setFilters.granularity) {
@@ -233,7 +233,7 @@ const Dashboard = ({ public_keys, units, uri }) => {
             finalArr.push({
                 temperature: arr[i].temperature * unitsTransfer,
                 humidity: arr[i].humidity,
-                date: moment().format('HH:mm DD.MM.YY')
+                date: moment().format('HH:mm \n DD.MM.YY')
             });
             // Kontrola zda není poslední
             if (i < arr.length - 1) {

@@ -13,19 +13,16 @@ import { _listUsersLocations } from '../axiosCalls/locations';
 ReactSession.setStoreType("localStorage");
 
 const user = ReactSession.get("meteostanice-user");
-let callOnce = false;
 
 const Home = () => {
     const [stations, setStations] = useState([]);
 
     useEffect(() => {
-        if (callOnce) return;
 
         getPublicTokens();
     }, []);
 
     async function getPublicTokens() {
-        callOnce = true;
         let arr = [];
         const temp = (await _listUsersLocations()).data;
 
