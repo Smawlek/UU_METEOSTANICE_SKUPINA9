@@ -13,17 +13,19 @@ import Button from '@mui/material/Button';
 // Rechart
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, LabelList } from 'recharts';
 // Ikony 
-import { BsFillGearFill } from "react-icons/bs";
+import { BsFillGearFill } from "react-icons/bs"; 
 import { FiRefreshCcw } from "react-icons/fi";
+import { GiCrossedAirFlows } from "react-icons/gi";
+import { FaTemperatureHigh } from "react-icons/fa";
 // Axios
 import Axios from 'axios';
 const source = Axios.CancelToken.source();
 const config = { cancelToken: source.token };
 // Konstanty
-const SERVER_BASE_URL = /*"http://localhost:4000" */"https://testing-heroku-dobest.herokuapp.com";
+let SERVER_BASE_URL = "http://localhost:4000" //"https://testing-heroku-dobest.herokuapp.com";
 // Ostatní proměnné
 let setFilters = {
-    start: moment(Date.now()).subtract(2, 'days').format('YYYY-MM-DD'),
+    start: moment(Date.now()).subtract(1, 'days').format('YYYY-MM-DD'),
     startTime: '00:00',
     end: moment(Date.now()).format('YYYY-MM-DD'),
     endTime: '23:59',
@@ -34,7 +36,7 @@ let unitsSign = '°C';
 let unitsTransfer = 1;
 let called = false;
 
-const Dashboard = ({ public_tokens, units }) => {
+const Dashboard = ({ public_keys, units, uri }) => {
     // Stanice
     const [shownStation, setShownStation] = useState();
     const [shownStationName, setShownStationName] = useState();
@@ -42,11 +44,15 @@ const Dashboard = ({ public_tokens, units }) => {
     const [shownData, setShownData] = useState("");
     const [temp, setTemp] = useState(0);
     const [humid, setHumid] = useState(0);
+    const [lastUpdate, setLastUpdate] = useState('Nedefinováno');
+    const [showTempUnits, setShowTempUnits] = useState(false);
+    const [showHumidUnits, setShowHumidUnits] = useState(false);
     // Filtry
     const [showFilterModal, setShowFilterModal] = useState(false);
     // UseEffecty
     useEffect(() => {
         called = true;
+        SERVER_BASE_URL = uri != undefined && uri != null && uri != "" ? uri : SERVER_BASE_URL;
         // Nastavení jednotek
         setUnitsVariables(units);
         // Získání přístupu ke stanicím
@@ -112,10 +118,10 @@ const Dashboard = ({ public_tokens, units }) => {
     async function checkStations() {
         let arr = [];
 
-        if (public_tokens === undefined || public_tokens.length <= 0) return;
+        if (public_keys === undefined || public_keys.length <= 0) return;
 
-        for (let i = 0; i < public_tokens.length; i++) {
-            let temp = (await _logDevice({ token: public_tokens[i] })).data[0];
+        for (let i = 0; i < public_keys.length; i++) {
+            let temp = (await _logDevice({ token: public_keys[i] })).data[0];
 
             if (temp != undefined) {
                 arr.push({ label: temp.location_name, value: temp.token });
@@ -185,7 +191,9 @@ const Dashboard = ({ public_tokens, units }) => {
     }
 
     async function filterData(arr) {
-        let finalData = [];
+        
+        setLastUpdate(moment(arr[arr.length - 1].date).format('hh:mm DD.MM.YYYY'))
+        let finalData = completeMissing(arr);;
         // granularita | 0 - 1 min, 1 - 5 min, 2 - 10 min, 3 - 30 min, 4 - 1 h, 5 - 1 den
         switch (setFilters.granularity) {
             case 0:
@@ -210,7 +218,9 @@ const Dashboard = ({ public_tokens, units }) => {
                 break;
         }
 
-        completeMissing(finalData);
+        setShownData(finalData);
+        setTemp(finalData[finalData.length - 1].temperature);
+        setHumid(finalData[finalData.length - 1].humidity);
     }
 
     function upsample(arr) {
@@ -223,7 +233,7 @@ const Dashboard = ({ public_tokens, units }) => {
             finalArr.push({
                 temperature: arr[i].temperature * unitsTransfer,
                 humidity: arr[i].humidity,
-                date: moment().format('YYYY-MM-DD HH:mm:SS')
+                date: moment().format('HH:mm DD.MM.YY')
             });
             // Kontrola zda není poslední
             if (i < arr.length - 1) {
@@ -251,7 +261,7 @@ const Dashboard = ({ public_tokens, units }) => {
             fin.push({
                 temperature: arr[i].temperature * unitsTransfer,
                 humidity: arr[i].humidity,
-                date: moment(arr[i].date).format('YYYY-MM-DD HH:mm:SS')
+                date: moment(arr[i].date).format('HH:mm \n DD.MM.YY')
             });
         }
 
@@ -307,10 +317,6 @@ const Dashboard = ({ public_tokens, units }) => {
 
             actualDate = moment(actualDate).add(granPlus, 'minutes').format('YYYY-MM-DD HH:mm:SS');
         }
-
-        setShownData(finalData);
-        setTemp(finalData[finalData.length - 1].temperature);
-        setHumid(finalData[finalData.length - 1].humidity);
     }
 
     return (
@@ -318,8 +324,8 @@ const Dashboard = ({ public_tokens, units }) => {
             <div className='dashboard-container'>
                 {/* Horní bar */}
                 <div className='row dashboard-header mx-auto'>
-                    <div className='col-sm-12 col-md-12 col-lg-7'>
-                        <h3> <b> Měření teploty - {shownStationName} </b> </h3>
+                    <div className='col-sm-12 col-md-12 col-lg-5'>
+                        <h3> <b> Meteostanice - {shownStationName} </b> </h3>
                     </div>
                     <div className='col-sm-12 col-md-12 col-lg-3'>
                         {stations.length <= 1 ? '' :
@@ -333,7 +339,21 @@ const Dashboard = ({ public_tokens, units }) => {
                             />
                         }
                     </div>
-                    <div className='dashboard-header-controls col-sm-12 col-md-12 col-lg-1'>
+                    <div className='dashboard-header-controls col-sm-12 col-md-4 col-lg-1'>
+                        <Tooltip title={showTempUnits ? 'Schovat čísla u teplot' : 'Zobrazit čísla u teplot'} placement='top'>
+                            <IconButton onClick={() => { setShowTempUnits(!showTempUnits) }}>
+                                <FaTemperatureHigh className={showTempUnits ? 'green' : 'red'} />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                    <div className='dashboard-header-controls col-sm-12 col-md-4 col-lg-1'>
+                        <Tooltip title={showHumidUnits ? 'Schovat čísla u vlhkosti vzduchu' : 'Zobrazit čísla u vlhkosti vzduchu'} placement='top'>
+                            <IconButton onClick={() => { setShowHumidUnits(!showHumidUnits) }}>
+                                <GiCrossedAirFlows className={showHumidUnits ? 'green' : 'red'} />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                    <div className='dashboard-header-controls col-sm-4 col-md-4 col-lg-1'>
                         <Tooltip title={"Obnovit"} placement='top'>
                             <IconButton onClick={() => { getData() }}>
                                 <FiRefreshCcw />
@@ -353,7 +373,8 @@ const Dashboard = ({ public_tokens, units }) => {
                     <div className="col-sm-12 col-md-12 col-lg-12 mx-auto search-result"> <p> <b> DATA SE NAČÍTAJÍ </b> </p> </div> :
                         <div className='row dashboard-body'>
                             <div className='col-sm-12 col-md-12 col-lg-5 mx-auto'>
-                                <span> Aktuální teplota: {temp} {unitsSign}  |  Aktuální vlhkost: {humid} % </span>
+                                <span> <b> Aktuální teplota: {temp} {unitsSign}  |  Aktuální vlhkost: {humid} % </b> </span>
+                                <p> Granularita: {setFilters.granularity === 0 ? '1 min' : setFilters.granularity === 1 ? "5 min" : setFilters.granularity === 2 ? "10 min" : setFilters.granularity === 3 ? '30 min' : setFilters.granularity === 4 ? '1 h' : '1 den'} </p>
                             </div>
                             <div
                                 style={{
@@ -366,17 +387,21 @@ const Dashboard = ({ public_tokens, units }) => {
                                 <ResponsiveContainer height={300}>
                                     <LineChart data={shownData}>
                                         <XAxis dataKey="date" />
-                                        <YAxis type="number" domain={[-50, 50]} />
+                                        <YAxis type="number" label={{ value: 'Teplota', angle: -90, position: 'insideLeft' }} yAxisId="left-axis" orientation='left' domain={[-50, 50]} dataKey="temperature" allowDataOverflow />
+                                        <YAxis type="number" label={{ value: 'Vlhkost vzduchu', angle: -90, position: 'insideRight' }} yAxisId="right-axis" orientation='right' domain={[0, 100]} dataKey="humidity" />
                                         <CartesianGrid stroke="#eee" />
                                         <Legend />
-                                        <Line type="monotone" name='Teplota' dataKey="temperature" stroke="#8884d8" isAnimationActive={false}>
-                                            {setFilters.granularity > 3 ? <LabelList dataKey="temperature" position="top" /> : ""}
+                                        <Line type="monotone" name='Teplota' dataKey="temperature" stroke="#8884d8" isAnimationActive={false} yAxisId="left-axis">
+                                            {showTempUnits ? <LabelList dataKey="temperature" position="top" /> : ""}
                                         </Line>
-                                        <Line type="monotone" name='Vlhkost vzduchu' dataKey="humidity" stroke="#82ca9d" isAnimationActive={false}>
-                                            {setFilters.granularity > 3 ? <LabelList dataKey="humidity" position="top" /> : ""}
+                                        <Line type="monotone" name='Vlhkost vzduchu' dataKey="humidity" stroke="#82ca9d" isAnimationActive={false} yAxisId="right-axis">
+                                            {showHumidUnits ? <LabelList dataKey="humidity" position="top" /> : ""}
                                         </Line>
                                     </LineChart>
                                 </ResponsiveContainer>
+                            </div>
+                            <div className='col-sm-12 col-md-12 col-lg-12'>
+                                <span className='mx-auto'> Poslední aktualizace: {lastUpdate} </span>
                             </div>
                         </div>
                 }
